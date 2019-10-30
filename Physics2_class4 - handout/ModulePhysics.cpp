@@ -216,6 +216,55 @@ PhysBody* ModulePhysics::CreateChain(int x, int y, int* points, int size)
 	return pbody;
 }
 
+PhysBody* ModulePhysics::CreateBumper(int x, int y, int radius, int width, int height, bool flip) {
+
+	//Circle of the bumper
+	b2BodyDef circle;
+
+	circle.type = b2_staticBody;
+	
+	circle.position.Set(PIXEL_TO_METERS(x), PIXEL_TO_METERS(y));
+
+	b2Body* c = world->CreateBody(&circle);
+
+	b2CircleShape shapeCircle;
+	shapeCircle.m_radius = PIXEL_TO_METERS(radius);
+	b2FixtureDef fixtureCircle;
+	fixtureCircle.shape = &shapeCircle;
+
+	c->CreateFixture(&fixtureCircle);
+
+	
+	//Rectangle of the bumper
+	b2BodyDef rectangle;
+
+	rectangle.type = b2_dynamicBody;
+	
+	rectangle.position.Set(PIXEL_TO_METERS(x), PIXEL_TO_METERS(y));
+
+	b2Body* r = world->CreateBody(&rectangle);
+	b2PolygonShape shapeRectangle;
+	shapeRectangle.SetAsBox(PIXEL_TO_METERS(width) * 0.5f, PIXEL_TO_METERS(height) * 0.5f);
+
+	b2FixtureDef fixtureRectangle;
+	fixtureRectangle.shape = &shapeRectangle;
+	fixtureRectangle.density = 1.0f;
+
+	r->CreateFixture(&fixtureRectangle);
+
+	b2RevoluteJointDef jointDef;
+	jointDef.bodyA = c;
+	jointDef.bodyB = r;
+
+	jointDef.localAnchorA = c->GetPosition();
+	jointDef.localAnchorB = r->GetPosition();
+
+	b2RevoluteJoint* joint = (b2RevoluteJoint*)world->CreateJoint(&jointDef);
+
+
+	return nullptr;
+}
+
 // 
 update_status ModulePhysics::PostUpdate()
 {
