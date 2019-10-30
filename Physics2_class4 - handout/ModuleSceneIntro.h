@@ -22,12 +22,14 @@ public:
 	p2List<PhysBody*> boxes;
 	p2List<PhysBody*> ricks;
 
+
 	PhysBody* sensor;
 	bool sensed;
 
 	SDL_Texture* circle;
 	SDL_Texture* box;
 	SDL_Texture* rick;
+	SDL_Texture* tabletop;
 
 	PhysBody* bumper1;
 	PhysBody* circleBumper1;

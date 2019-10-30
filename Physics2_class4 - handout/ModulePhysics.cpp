@@ -199,7 +199,7 @@ PhysBody* ModulePhysics::CreateChain(int x, int y, int* points, int size)
 		p[i].y = PIXEL_TO_METERS(points[i * 2 + 1]);
 	}
 
-	shape.CreateLoop(p, size / 2);
+	shape.CreateLoop(p, size / 2); //ADRI: esto es lo que junta el ultimo punto con el primero. Por eso no cabamos de juntar las chains
 
 	b2FixtureDef fixture;
 	fixture.shape = &shape;

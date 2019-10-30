@@ -9,7 +9,7 @@
 
 ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
-	circle = box = rick = NULL;
+	circle = box = rick = tabletop= NULL;
 	ray_on = false;
 	sensed = false;
 }
@@ -28,10 +28,17 @@ bool ModuleSceneIntro::Start()
 	circle = App->textures->Load("pinball/wheel.png"); 
 	box = App->textures->Load("pinball/crate.png");
 	rick = App->textures->Load("pinball/rick_head.png");
+	tabletop = App->textures->Load("pinball/tabletop_no_bumpers.png");
 	bonus_fx = App->audio->LoadFx("pinball/bonus.wav");
 
 	circleBumper1 = App->physics->CreateCircle(200, 400, 15, STATIC);
 	bumper1 = App->physics->CreateRectangle(200, 400, 100, 50, DINAMIC);
+
+
+	//bool ModuleRender::Blit(SDL_Texture* texture, int x, int y, SDL_Rect* section, float speed, double angle, int pivot_x, int pivot_y )
+
+
+	
 
 
 
@@ -121,7 +128,8 @@ update_status ModuleSceneIntro::Update()
 
 	// All draw functions ------------------------------------------------------
 	p2List_item<PhysBody*>* c = circles.getFirst();
-
+	
+	
 	while(c != NULL)
 	{
 		int x, y;
@@ -168,6 +176,12 @@ update_status ModuleSceneIntro::Update()
 
 		if(normal.x != 0.0f)
 			App->renderer->DrawLine(ray.x + destination.x, ray.y + destination.y, ray.x + destination.x + normal.x * 25.0f, ray.y + destination.y + normal.y * 25.0f, 100, 255, 100);
+	}
+
+	// blit the background......
+	if (tabletop != NULL)
+	{
+		App->renderer->Blit(tabletop, 0, 0);
 	}
 
 	return UPDATE_CONTINUE;
