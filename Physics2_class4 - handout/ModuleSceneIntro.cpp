@@ -31,8 +31,7 @@ bool ModuleSceneIntro::Start()
 	tabletop = App->textures->Load("pinball/tabletop_no_bumpers.png");
 	bonus_fx = App->audio->LoadFx("pinball/bonus.wav");
 
-	circleBumper1 = App->physics->CreateCircle(200, 400, 15, STATIC);
-	bumper1 = App->physics->CreateRectangle(200, 400, 100, 50, DINAMIC);
+	App->physics->CreateBumper(200, 400, 20, 30, 40, false);
 
 
 	//bool ModuleRender::Blit(SDL_Texture* texture, int x, int y, SDL_Rect* section, float speed, double angle, int pivot_x, int pivot_y )
