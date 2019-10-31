@@ -191,6 +191,9 @@ bool ModuleSceneIntro::Start()
 	micro_sensor14 = App->physics->CreateRectangleSensor(503, 712, 15, 15);
 
 
+	leftBumper = App->physics->CreateBumper(260, 830, 300, 10, 80, 20);
+	rightBumper = App->physics->CreateBumper(400, 830, 360, 10, 80, 20);
+
 	return ret;
 }
 
@@ -216,7 +219,15 @@ update_status ModuleSceneIntro::PreUpdate() {
 // Update: draw figures
 update_status ModuleSceneIntro::Update()
 {
-	
+	if (App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_DOWN)
+	{
+		leftBumper->body->ApplyAngularImpulse(-50, true);
+	}
+
+	if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_DOWN)
+	{
+		rightBumper->body->ApplyAngularImpulse(50, true);
+	}
 	
 	if(App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)
 	{
