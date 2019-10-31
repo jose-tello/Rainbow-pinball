@@ -15,6 +15,7 @@ public:
 	bool Start();
 	update_status PreUpdate();
 	update_status Update();
+	update_status PostUpdate();
 	bool CleanUp();
 	void OnCollision(PhysBody* bodyA, PhysBody* bodyB);
 
@@ -22,7 +23,10 @@ public:
 	p2List<PhysBody*> circles;
 	p2List<PhysBody*> boxes;
 	p2List<PhysBody*> ricks;
-	p2List<PhysBody*> micro_sensors; //probably usefull to check for collisions and special blits
+	p2List<PhysBody*> interactables; 
+	p2List<PhysBody*> interactable_bumpers;
+	p2List<SDL_Rect*> interactables_list;
+	p2List<SDL_Rect*> interactable_bumpers_list;
 
 	PhysBody* leftBumper;
 	PhysBody* rightBumper;
@@ -46,7 +50,7 @@ public:
 	PhysBody* micro_sensor14;
 	PhysBody* land_mass1;
 	PhysBody* land_mass2;
-	PhysBody* weird_static_bumper;
+	PhysBody* trd_static_bumper;
 	PhysBody* fst_static_bumper;
 	PhysBody* snd_static_bumper;
 	PhysBody* ruby_b;
@@ -70,6 +74,7 @@ public:
 	SDL_Rect amethyst;
 	SDL_Rect magic_Well;
 	SDL_Rect static_bumper;
+	SDL_Rect static_bumper_2nd;
 	SDL_Rect weird_bumper;
 	SDL_Rect heart;
 	SDL_Rect microlight;

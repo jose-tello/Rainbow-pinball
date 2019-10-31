@@ -102,49 +102,58 @@ bool ModuleSceneIntro::Start()
 	App->physics->CreateChain(0, 0, tabletop_no_bumpers, 120, false); //map walls
 
 	//create interactive static bodies
-	sapphire_b=App->physics->CreateCircle(299, 230, 28, STATIC); //sapphire
+	interactables.add(sapphire_b=App->physics->CreateCircle(299, 230, 28, STATIC)); //sapphire
 	sapphire.x = 120; sapphire.y = 187; sapphire.w = sapphire.h = 56;
+	interactables_list.add(&sapphire);
 
-	ruby_b=App->physics->CreateCircle(285, 315, 28, STATIC); //ruby
+	interactables.add(ruby_b=App->physics->CreateCircle(285, 315, 28, STATIC)); //ruby
 	ruby.x = 0; ruby.y = 187; ruby.w = ruby.h = 56; 
+	interactables_list.add(&ruby);
 
-	emmerald_b=App->physics->CreateCircle(386, 430, 28, STATIC); //emmerald
+	interactables.add(emmerald_b=App->physics->CreateCircle(386, 430, 28, STATIC)); //emmerald
 	emmerald.x = 360; emmerald.y = 67; emmerald.w = emmerald.h = 56;
+	interactables_list.add(&emmerald);
 
-	amethyst_b=App->physics->CreateCircle(380, 262, 28, STATIC); //amethyst
+	interactables.add(amethyst_b=App->physics->CreateCircle(380, 262, 28, STATIC)); //amethyst
 	amethyst.x = 240; amethyst.y = 187; amethyst.w = amethyst.h = 56;
+	interactables_list.add(&amethyst);
 
-	magic_Well_b=App->physics->CreateCircle(207, 467, 28, STATIC); //magic_Well
+	interactables.add(magic_Well_b=App->physics->CreateCircle(207, 467, 28, STATIC)); //magic_Well
 	magic_Well.x = 240; magic_Well.y = 67; magic_Well.w = magic_Well.h = 56;
+	interactables_list.add(&magic_Well);
 
 
 	//Static bumpers
 	int static_bumper_1[6] = {
-		428, 756,
-		477, 640,
-		483, 734
+		0, 116,
+		49, 0,
+		55, 94
 	};
-	fst_static_bumper = App->physics->CreateChain(0, 0, static_bumper_1, 6, false);
+	interactable_bumpers.add( fst_static_bumper = App->physics->CreateChain(428, 640, static_bumper_1, 6, false));
 	static_bumper.x = static_bumper.y = 0; static_bumper.w = 56; static_bumper.h = 120;
+	interactable_bumpers_list.add(&static_bumper);
+	
 	
 	int static_bumper_2[6] = {
-		227, 756,
-		172, 731,
-		177, 638
+		55, 118,
+		0, 93,
+		5, 0
 	};
-	snd_static_bumper = App->physics->CreateChain(0, 0, static_bumper_2, 6, false);
-	//shares box, just "flip" in render
+	interactable_bumpers.add(snd_static_bumper = App->physics->CreateChain(172, 638, static_bumper_2, 6, false));
+	static_bumper_2nd.x = 56; static_bumper_2nd.y = 0; static_bumper_2nd.w = 56; static_bumper_2nd.h = 120;
+	interactable_bumpers_list.add(&static_bumper_2nd);
 
 	int static_bumper_3[12] = {
-		257, 322,
-		234, 329,
-		236, 339,
-		321, 365,
-		327, 356,
-		306, 329
+		23, 0,
+		0, 7,
+		2, 17,
+		87, 43,
+		93, 34,
+		72, 7
 	};
-	weird_static_bumper = App->physics->CreateChain(0, 0, static_bumper_3, 12, false);
+	interactable_bumpers.add(trd_static_bumper = App->physics->CreateChain(234, 322, static_bumper_3, 12, false));
 	weird_bumper.x = 480; weird_bumper.y = 78; weird_bumper.w = 93; weird_bumper.h = 41;
+	interactable_bumpers_list.add(&weird_bumper);
 
 
 
@@ -180,30 +189,34 @@ bool ModuleSceneIntro::Start()
 
 	//create interactive sensors
 	heart.x = 360; heart.y = 217; heart.w = 28; heart.h = 23;
-	sensorheart1 = App->physics->CreateRectangleSensor(282, 140, 25, 25); //heart n1
-	sensorheart2 = App->physics->CreateRectangleSensor(326, 140, 25, 25); //heart n2
-	sensorheart3 = App->physics->CreateRectangleSensor(371, 140, 25, 25); //heart n3
+	for (int i = 0; i < 3; i++) { interactables_list.add(&heart); }
+
+	interactables.add(sensorheart1 = App->physics->CreateRectangleSensor(282, 141, 15, 15)); //heart n1
+	interactables.add(sensorheart2 = App->physics->CreateRectangleSensor(326, 141, 15, 15)); //heart n2
+	interactables.add(sensorheart3 = App->physics->CreateRectangleSensor(371, 141, 15, 15)); //heart n3
 
 	//create all micro_sensors
 	microlight.x = 480; microlight.y = 217; microlight.w = 22; microlight.h = 23;
-	sensorheart1 = App->physics->CreateRectangleSensor(192, 218, 15, 15); //top_left
-	sensorheart2 = App->physics->CreateRectangleSensor(222, 210, 15, 15);
-	sensorheart3 = App->physics->CreateRectangleSensor(252, 200, 15, 15);
+	for (int i = 0; i < 14; i++) { interactables_list.add(&microlight); }
 
-	micro_sensor4 = App->physics->CreateRectangleSensor(400, 200, 15, 15); //top_right
-	micro_sensor5 = App->physics->CreateRectangleSensor(430, 210, 15, 15);
-	micro_sensor6 = App->physics->CreateRectangleSensor(460, 218, 15, 15);
+	interactables.add(sensorheart1 = App->physics->CreateRectangleSensor(192, 218, 15, 15)); //top_left
+	interactables.add(sensorheart2 = App->physics->CreateRectangleSensor(222, 210, 15, 15));
+	interactables.add(sensorheart3 = App->physics->CreateRectangleSensor(252, 200, 15, 15));
 
-	micro_sensor7 = App->physics->CreateRectangleSensor(247, 362, 15, 15); //middle
-	micro_sensor8 = App->physics->CreateRectangleSensor(277, 370, 15, 15);
-	micro_sensor9 = App->physics->CreateRectangleSensor(305, 379, 15, 15);
+	interactables.add(micro_sensor4 = App->physics->CreateRectangleSensor(400, 200, 15, 15)); //top_right
+	interactables.add(micro_sensor5 = App->physics->CreateRectangleSensor(430, 210, 15, 15));
+	interactables.add(micro_sensor6 = App->physics->CreateRectangleSensor(460, 218, 15, 15));
 
-	micro_sensor10 = App->physics->CreateRectangleSensor(162, 435, 15, 15); //left
-	micro_sensor11= App->physics->CreateRectangleSensor(162, 465, 15, 15);
-	micro_sensor12= App->physics->CreateRectangleSensor(162, 497, 15, 15);
+	interactables.add(micro_sensor7 = App->physics->CreateRectangleSensor(247, 362, 15, 15)); //middle
+	interactables.add(micro_sensor8 = App->physics->CreateRectangleSensor(277, 370, 15, 15));
+	interactables.add(micro_sensor9 = App->physics->CreateRectangleSensor(305, 379, 15, 15));
 
-	micro_sensor13 = App->physics->CreateRectangleSensor(152, 712, 15, 15); //isolated in bottom lane
-	micro_sensor14 = App->physics->CreateRectangleSensor(503, 712, 15, 15);
+	interactables.add(micro_sensor10 = App->physics->CreateRectangleSensor(162, 435, 15, 15)); //left
+	interactables.add(micro_sensor11= App->physics->CreateRectangleSensor(162, 465, 15, 15));
+	interactables.add(micro_sensor12= App->physics->CreateRectangleSensor(162, 497, 15, 15));
+
+	interactables.add(micro_sensor13 = App->physics->CreateRectangleSensor(152, 712, 15, 15)); //isolated in bottom lane
+	interactables.add(micro_sensor14 = App->physics->CreateRectangleSensor(503, 712, 15, 15));
 
 
 	leftBumper = App->physics->CreateBumper(260, 830, 300, 10, 80, 20);
@@ -221,6 +234,7 @@ bool ModuleSceneIntro::CleanUp()
 }
 
 update_status ModuleSceneIntro::PreUpdate() {
+
 	// blit the background......
 	if (tabletop != NULL)
 	{
@@ -351,6 +365,38 @@ update_status ModuleSceneIntro::Update()
 		c = c->next;
 	}
 
+
+	//Drawing shiny elements on collision
+	c = interactables.getFirst();
+	p2List_item<SDL_Rect*>* d;
+	d = interactables_list.getFirst();
+
+	while (c != NULL && d != NULL)
+	{
+		if (c->data->shiny) {
+			int x, y;
+			c->data->GetPosition(x, y);
+			App->renderer->Blit(sfx_spritesheet, x, y, d->data);
+		}
+		c = c->next; 
+		d = d->next;
+	}
+
+
+	//different so we can add velocity calculus next
+	c = interactable_bumpers.getFirst();
+	d = interactable_bumpers_list.getFirst();
+	while (c != NULL && d != NULL)
+	{
+		if (c->data->shiny) {
+			int x, y;
+			c->data->GetPosition(x, y);
+			App->renderer->Blit(sfx_spritesheet, x, y, d->data);
+		}
+		c = c->next;
+		d = d->next;
+	}
+
 	// ray -----------------
 	if(ray_on == true)
 	{
@@ -369,11 +415,39 @@ update_status ModuleSceneIntro::Update()
 	return UPDATE_CONTINUE;
 }
 
+update_status ModuleSceneIntro::PostUpdate() {
+	
+	p2List_item<PhysBody*>* c;
+	c = interactables.getFirst();
+
+	
+	while (c != NULL) {
+
+		c->data->shiny = false;
+		c = c->next;
+	}
+	c = interactable_bumpers.getFirst();
+
+	while (c != NULL) {
+
+		c->data->shiny = false;
+		c = c->next;
+	}
+	return UPDATE_CONTINUE;
+}
+
 void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 {
 	int x, y;
 
 	App->audio->PlayFx(bonus_fx);
+	if (bodyA != nullptr) { bodyA->shiny = true; }
+	if (bodyB != nullptr) { bodyB->shiny = true; }
+
+
+
+
+
 
 	/*
 	if(bodyA)
