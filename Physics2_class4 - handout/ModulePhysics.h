@@ -52,7 +52,7 @@ public:
 	PhysBody* CreateCircle(int x, int y, int radius, BODYTYPE type);
 	PhysBody* CreateRectangle(int x, int y, int width, int height, BODYTYPE type);
 	PhysBody* CreateRectangleSensor(int x, int y, int width, int height);
-	PhysBody* CreateChain(int x, int y, int* points, int size);
+	PhysBody* CreateChain(int x, int y, int* points, int size, bool dynamic = true);
 	PhysBody* CreateBumper(int x, int y, int radius, int width, int height, bool flip);
 
 	// b2ContactListener ---

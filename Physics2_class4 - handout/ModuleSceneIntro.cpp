@@ -34,14 +34,47 @@ bool ModuleSceneIntro::Start()
 	App->physics->CreateBumper(200, 400, 20, 30, 40, false);
 
 
-	//bool ModuleRender::Blit(SDL_Texture* texture, int x, int y, SDL_Rect* section, float speed, double angle, int pivot_x, int pivot_y )
+	sensor = App->physics->CreateRectangleSensor(SCREEN_WIDTH / 2, SCREEN_HEIGHT, SCREEN_WIDTH, 50);
 
-
+	//Stablish map boundries
+	int tabletop_no_bumpers[58] = {
+	266, 930,
+	266, 900,
+	240, 881,
+	123, 823,
+	121, 869,
+	88, 868,
+	86, 609,
+	100, 572,
+	137, 551,
+	141, 411,
+	148, 402,
+	89, 334,
+	105, 277,
+	148, 207,
+	261, 170,
+	262, 111,
+	383, 106,
+	389, 165,
+	480, 203,
+	463, 309,
+	390, 398,
+	542, 518,
+	531, 553,
+	550, 567,
+	566, 597,
+	565, 869,
+	532, 870,
+	532, 824,
+	413, 884
+	};
+	
+	App->physics->CreateChain(0, 0, tabletop_no_bumpers, 58, false);
 	
 
 
 
-	sensor = App->physics->CreateRectangleSensor(SCREEN_WIDTH / 2, SCREEN_HEIGHT, SCREEN_WIDTH, 50);
+
 
 	return ret;
 }
@@ -53,10 +86,22 @@ bool ModuleSceneIntro::CleanUp()
 
 	return true;
 }
+update_status ModuleSceneIntro::PreUpdate() {
+	// blit the background......
+	if (tabletop != NULL)
+	{
+		//App->renderer->Blit(tabletop, 0, 0);
+	}
 
-// Update: draw background
+	return UPDATE_CONTINUE;
+}
+
+
+// Update: draw figures
 update_status ModuleSceneIntro::Update()
 {
+	
+	
 	if(App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)
 	{
 		ray_on = !ray_on;
@@ -177,11 +222,7 @@ update_status ModuleSceneIntro::Update()
 			App->renderer->DrawLine(ray.x + destination.x, ray.y + destination.y, ray.x + destination.x + normal.x * 25.0f, ray.y + destination.y + normal.y * 25.0f, 100, 255, 100);
 	}
 
-	// blit the background......
-	if (tabletop != NULL)
-	{
-		App->renderer->Blit(tabletop, 0, 0);
-	}
+
 
 	return UPDATE_CONTINUE;
 }
