@@ -24,6 +24,8 @@ public:
 	p2List<PhysBody*> ricks;
 	p2List<PhysBody*> micro_sensors; //probably usefull to check for collisions and special blits
 
+	PhysBody* leftBumper;
+	PhysBody* rightBumper;
 
 	PhysBody* sensorheart1;
 	PhysBody* sensorheart2;

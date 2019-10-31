@@ -220,7 +220,7 @@ PhysBody* ModulePhysics::CreateChain(int x, int y, int* points, int size, bool d
 	return pbody;
 }
 
-PhysBody* ModulePhysics::CreateBumper(int x, int y, int xr, int radius, int width, int height, bool flip) {
+PhysBody* ModulePhysics::CreateBumper(int x, int y, int xr, int radius, int width, int height) {
 
 	//Circle of the bumper
 	b2BodyDef circle;
@@ -250,23 +250,27 @@ PhysBody* ModulePhysics::CreateBumper(int x, int y, int xr, int radius, int widt
 	b2Body* r = world->CreateBody(&rectangle);
 	b2PolygonShape shapeRectangle;
 	shapeRectangle.SetAsBox(PIXEL_TO_METERS(width) * 0.5f, PIXEL_TO_METERS(height) * 0.5f);
-	
 
 	b2FixtureDef fixtureRectangle;
 	fixtureRectangle.shape = &shapeRectangle;
-	fixtureRectangle.density = 1.0f;
-
-	
+	fixtureRectangle.density = 4.0f;
 
 	r->CreateFixture(&fixtureRectangle);
 
+	PhysBody* pbody = new PhysBody();
+	pbody->body = r;
+	r->SetUserData(pbody);
+	pbody->width = pbody->height = 0;
+
 	b2RevoluteJointDef jointDef;
 
+	jointDef.lowerAngle = -0.25f * b2_pi;
+	jointDef.upperAngle = 0.25f * b2_pi; 	jointDef.enableLimit = true;
 	jointDef.Initialize(c, r, { c->GetPosition().x, c->GetPosition().y });
 	
 	b2RevoluteJoint* joint = (b2RevoluteJoint*)world->CreateJoint(&jointDef);
 
-	return nullptr;
+	return pbody;
 }
 
 // 
