@@ -12,6 +12,8 @@
 #define METERS_TO_PIXELS(m) ((int) floor(PIXELS_PER_METER * m))
 #define PIXEL_TO_METERS(p)  ((float) METER_PER_PIXEL * p)
 
+#define BUMPER_POINTS 7
+
 enum BODYTYPE
 {
 	STATIC,
@@ -53,7 +55,7 @@ public:
 	PhysBody* CreateRectangle(int x, int y, int width, int height, BODYTYPE type);
 	PhysBody* CreateRectangleSensor(int x, int y, int width, int height);
 	PhysBody* CreateChain(int x, int y, int* points, int size, bool dynamic = true);
-	PhysBody* CreateBumper(int x, int y, int xr, int radius, int width, int height);
+	PhysBody* CreateBumper(int x, int y, int xr, int radius, int width, int height, bool flip);
 
 	// b2ContactListener ---
 	void BeginContact(b2Contact* contact);

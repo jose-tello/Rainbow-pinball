@@ -191,8 +191,8 @@ bool ModuleSceneIntro::Start()
 	micro_sensor14 = App->physics->CreateRectangleSensor(503, 712, 15, 15);
 
 
-	leftBumper = App->physics->CreateBumper(260, 830, 300, 10, 80, 20);
-	rightBumper = App->physics->CreateBumper(400, 830, 360, 10, 80, 20);
+	leftBumper = App->physics->CreateBumper(SCREEN_WIDTH * 0.5f - 105, 820, 10, 10, 80, 20, false);
+	rightBumper = App->physics->CreateBumper(SCREEN_WIDTH * 0.5f + 105, 820, 10, 10, 80, 20, true);
 
 	return ret;
 }

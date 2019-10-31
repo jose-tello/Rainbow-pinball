@@ -220,7 +220,7 @@ PhysBody* ModulePhysics::CreateChain(int x, int y, int* points, int size, bool d
 	return pbody;
 }
 
-PhysBody* ModulePhysics::CreateBumper(int x, int y, int xr, int radius, int width, int height) {
+PhysBody* ModulePhysics::CreateBumper(int x, int y, int xr, int radius, int width, int height, bool flip) {
 
 	//Circle of the bumper
 	b2BodyDef circle;
@@ -244,12 +244,57 @@ PhysBody* ModulePhysics::CreateBumper(int x, int y, int xr, int radius, int widt
 
 	rectangle.type = b2_dynamicBody;
 	
+	int auxX;
+	int auxY;
 	
-	rectangle.position.Set(PIXEL_TO_METERS(xr), PIXEL_TO_METERS(y));
+	if (!flip) {
+
+		auxX = x - xr;
+		
+	}
+
+	if (flip) {
+
+		auxX = x - 97;
+	}
+	
+	rectangle.position.Set(PIXEL_TO_METERS(auxX), PIXEL_TO_METERS(y));
 
 	b2Body* r = world->CreateBody(&rectangle);
+	
 	b2PolygonShape shapeRectangle;
-	shapeRectangle.SetAsBox(PIXEL_TO_METERS(width) * 0.5f, PIXEL_TO_METERS(height) * 0.5f);
+	
+
+	int points[14] = {
+	22, 0,
+	97, 42,
+	97, 53,
+	85, 58,
+	6, 27,
+	0, 12,
+	5, 1
+	};
+
+	
+	if (flip) {
+		for (uint i = 0; i < BUMPER_POINTS; ++i)
+		{
+			points[i * 2] = points[i * 2] + 2*abs(SCREEN_WIDTH/2 - points[i * 2]) - 565;
+		}
+
+	}
+	
+	b2Vec2* p = new b2Vec2[BUMPER_POINTS];
+
+	for (uint i = 0; i < BUMPER_POINTS; ++i)
+	{
+		p[i].x = PIXEL_TO_METERS(points[i * 2 + 0]);
+		p[i].y = PIXEL_TO_METERS(points[i * 2 + 1]);
+	}
+	
+	shapeRectangle.Set(p, BUMPER_POINTS);
+
+	//delete p;
 
 	b2FixtureDef fixtureRectangle;
 	fixtureRectangle.shape = &shapeRectangle;
