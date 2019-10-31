@@ -31,7 +31,9 @@ bool ModuleSceneIntro::Start()
 	tabletop = App->textures->Load("pinball/tabletop_no_bumpers.png");
 	bonus_fx = App->audio->LoadFx("pinball/bonus.wav");
 
-	App->physics->CreateBumper(200, 400, 20, 30, 40, false);
+	App->physics->CreateBumper(200, 740, 240, 10, 100, 30, false);
+
+	App->physics->CreateBumper(450, 740, 410, 10, 100, 30, false);
 
 
 	sensor = App->physics->CreateRectangleSensor(SCREEN_WIDTH / 2, SCREEN_HEIGHT, SCREEN_WIDTH, 50);
