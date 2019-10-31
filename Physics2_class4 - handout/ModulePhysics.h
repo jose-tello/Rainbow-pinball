@@ -35,6 +35,7 @@ public:
 
 public:
 	int width, height;
+	bool shiny = false;
 	b2Body* body;
 	Module* listener;
 };
