@@ -137,32 +137,32 @@ bool ModuleSceneIntro::Start()
 
 
 	//Static land masses
+
 	int landmass1[18] = {
-		120, 646,
-		130, 645,
-		133, 734,
-		144, 754,
-		250, 824,
-		226, 839,
-		136, 785,
-		122, 754,
-		120, 731
+	121, 648,
+	129, 648,
+	132, 730,
+	142, 757,
+	224, 809,
+	211, 818,
+	215, 835,
+	135, 784,
+	120, 747
 	};
 	App->physics->CreateChain(0, 0, landmass1, 18, false);
-	
-	int landmass2[20] = {
-		401, 826,
-		427, 840,
-		507, 791,
-		521, 777,
-		533, 751,
-		533, 646,
-		521, 646,
-		521, 733,
-		508, 757,
-		481, 777
+
+	int landmass2[18] = {
+	521, 646,
+	532, 648,
+	533, 750,
+	519, 785,
+	441, 833,
+	441, 814,
+	427, 811,
+	507, 760,
+	522, 734
 	};
-	App->physics->CreateChain(0, 0, landmass2, 20, false);
+	App->physics->CreateChain(0, 0, landmass2, 18, false);
 
 
 	//create interactive sensors
