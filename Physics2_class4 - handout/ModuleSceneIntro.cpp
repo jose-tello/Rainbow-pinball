@@ -31,12 +31,14 @@ bool ModuleSceneIntro::Start()
 	box = App->textures->Load("pinball/crate.png");
 	rick = App->textures->Load("pinball/rick_head.png");
 	tabletop = App->textures->Load("pinball/tabletop_no_bumpers.png");
+	sfx_spritesheet = App->textures->Load("pinball/sfx_spritesheet.png");
+
 	bonus_fx = App->audio->LoadFx("pinball/bonus.wav");
 
 
 	//create map boundries
 	int tabletop_no_bumpers[120] = {
-		269, 927,
+		269, 935,
 		270, 901,
 		126, 822,
 		122, 874,
@@ -95,16 +97,25 @@ bool ModuleSceneIntro::Start()
 		532, 874,
 		528, 824,
 		386, 900,
-		383, 928
+		383, 935
 	};
 	App->physics->CreateChain(0, 0, tabletop_no_bumpers, 120, false); //map walls
 
 	//create interactive static bodies
-	App->physics->CreateCircle(299, 230, 28, STATIC); //Sapphire
-	App->physics->CreateCircle(285, 315, 28, STATIC); //Ruby
-	App->physics->CreateCircle(386, 430, 28, STATIC); //Emmerald
-	App->physics->CreateCircle(380, 262, 28, STATIC); //Amethyst
-	App->physics->CreateCircle(207, 467, 28, STATIC); //Magic Well
+	sapphire_b=App->physics->CreateCircle(299, 230, 28, STATIC); //sapphire
+	sapphire.x = 120; sapphire.y = 187; sapphire.w = sapphire.h = 56;
+
+	ruby_b=App->physics->CreateCircle(285, 315, 28, STATIC); //ruby
+	ruby.x = 0; ruby.y = 187; ruby.w = ruby.h = 56; 
+
+	emmerald_b=App->physics->CreateCircle(386, 430, 28, STATIC); //emmerald
+	emmerald.x = 360; emmerald.y = 67; emmerald.w = emmerald.h = 56;
+
+	amethyst_b=App->physics->CreateCircle(380, 262, 28, STATIC); //amethyst
+	amethyst.x = 240; amethyst.y = 187; amethyst.w = amethyst.h = 56;
+
+	magic_Well_b=App->physics->CreateCircle(207, 467, 28, STATIC); //magic_Well
+	magic_Well.x = 240; magic_Well.y = 67; magic_Well.w = magic_Well.h = 56;
 
 
 	//Static bumpers
@@ -113,15 +124,16 @@ bool ModuleSceneIntro::Start()
 		477, 640,
 		483, 734
 	};
-	App->physics->CreateChain(0, 0, static_bumper_1, 6, false);
+	fst_static_bumper = App->physics->CreateChain(0, 0, static_bumper_1, 6, false);
+	static_bumper.x = static_bumper.y = 0; static_bumper.w = 56; static_bumper.h = 120;
 	
 	int static_bumper_2[6] = {
 		227, 756,
 		172, 731,
 		177, 638
 	};
-	App->physics->CreateChain(0, 0, static_bumper_2, 6, false);
-
+	snd_static_bumper = App->physics->CreateChain(0, 0, static_bumper_2, 6, false);
+	//shares box, just "flip" in render
 
 	int static_bumper_3[12] = {
 		257, 322,
@@ -131,7 +143,8 @@ bool ModuleSceneIntro::Start()
 		327, 356,
 		306, 329
 	};
-	App->physics->CreateChain(0, 0, static_bumper_3, 12, false);
+	weird_static_bumper = App->physics->CreateChain(0, 0, static_bumper_3, 12, false);
+	weird_bumper.x = 480; weird_bumper.y = 78; weird_bumper.w = 93; weird_bumper.h = 41;
 
 
 
@@ -149,7 +162,7 @@ bool ModuleSceneIntro::Start()
 	135, 784,
 	120, 747
 	};
-	App->physics->CreateChain(0, 0, landmass1, 18, false);
+	land_mass1 = App->physics->CreateChain(0, 0, landmass1, 18, false);
 
 	int landmass2[18] = {
 	521, 646,
@@ -162,15 +175,17 @@ bool ModuleSceneIntro::Start()
 	507, 760,
 	522, 734
 	};
-	App->physics->CreateChain(0, 0, landmass2, 18, false);
+	land_mass2 = App->physics->CreateChain(0, 0, landmass2, 18, false);
 
 
 	//create interactive sensors
+	heart.x = 360; heart.y = 217; heart.w = 28; heart.h = 23;
 	sensorheart1 = App->physics->CreateRectangleSensor(282, 140, 25, 25); //heart n1
 	sensorheart2 = App->physics->CreateRectangleSensor(326, 140, 25, 25); //heart n2
 	sensorheart3 = App->physics->CreateRectangleSensor(371, 140, 25, 25); //heart n3
 
 	//create all micro_sensors
+	microlight.x = 480; microlight.y = 217; microlight.w = 22; microlight.h = 23;
 	sensorheart1 = App->physics->CreateRectangleSensor(192, 218, 15, 15); //top_left
 	sensorheart2 = App->physics->CreateRectangleSensor(222, 210, 15, 15);
 	sensorheart3 = App->physics->CreateRectangleSensor(252, 200, 15, 15);
@@ -217,7 +232,10 @@ update_status ModuleSceneIntro::PreUpdate() {
 update_status ModuleSceneIntro::Update()
 {
 	
-	
+	if (App->input->GetKey(SDL_SCANCODE_R) == KEY_REPEAT)
+	{
+		App->renderer->Blit(sfx_spritesheet, 257, 289, &ruby);
+	}
 	if(App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)
 	{
 		ray_on = !ray_on;

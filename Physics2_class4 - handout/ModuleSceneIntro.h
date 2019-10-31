@@ -42,6 +42,16 @@ public:
 	PhysBody* micro_sensor12;
 	PhysBody* micro_sensor13;
 	PhysBody* micro_sensor14;
+	PhysBody* land_mass1;
+	PhysBody* land_mass2;
+	PhysBody* weird_static_bumper;
+	PhysBody* fst_static_bumper;
+	PhysBody* snd_static_bumper;
+	PhysBody* ruby_b;
+	PhysBody* sapphire_b;
+	PhysBody* emmerald_b;
+	PhysBody* amethyst_b;
+	PhysBody* magic_Well_b;
 	bool sensed;
 
 	SDL_Texture* circle;
@@ -50,9 +60,22 @@ public:
 	SDL_Texture* tabletop;
 	SDL_Texture* ball;
 	SDL_Texture* launcher;
+	SDL_Texture* sfx_spritesheet;
+
+	SDL_Rect ruby;
+	SDL_Rect sapphire;
+	SDL_Rect emmerald;
+	SDL_Rect amethyst;
+	SDL_Rect magic_Well;
+	SDL_Rect static_bumper;
+	SDL_Rect weird_bumper;
+	SDL_Rect heart;
+	SDL_Rect microlight;
 
 	PhysBody* bumper1;
 	PhysBody* circleBumper1;
+
+
 
 	uint bonus_fx;
 	p2Point<int> ray;
