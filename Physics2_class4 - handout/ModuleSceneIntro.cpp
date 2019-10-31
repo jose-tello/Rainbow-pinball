@@ -9,7 +9,7 @@
 
 ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
-	circle = box = rick = tabletop= NULL;
+	circle = box = rick = tabletop= ball= launcher= NULL;
 	ray_on = false;
 	sensed = false;
 }
@@ -25,55 +25,170 @@ bool ModuleSceneIntro::Start()
 
 	App->renderer->camera.x = App->renderer->camera.y = 0;
 
-	circle = App->textures->Load("pinball/wheel.png"); 
+	ball = App->textures->Load("pinball/the_ball.png"); 
+	circle = App->textures->Load("pinball/the_ball.png");
+	launcher = App->textures->Load("pinball/launcher.png");
 	box = App->textures->Load("pinball/crate.png");
 	rick = App->textures->Load("pinball/rick_head.png");
 	tabletop = App->textures->Load("pinball/tabletop_no_bumpers.png");
 	bonus_fx = App->audio->LoadFx("pinball/bonus.wav");
 
-	App->physics->CreateBumper(200, 400, 20, 30, 40, false);
 
-
-	sensor = App->physics->CreateRectangleSensor(SCREEN_WIDTH / 2, SCREEN_HEIGHT, SCREEN_WIDTH, 50);
-
-	//Stablish map boundries
-	int tabletop_no_bumpers[58] = {
-	266, 930,
-	266, 900,
-	240, 881,
-	123, 823,
-	121, 869,
-	88, 868,
-	86, 609,
-	100, 572,
-	137, 551,
-	141, 411,
-	148, 402,
-	89, 334,
-	105, 277,
-	148, 207,
-	261, 170,
-	262, 111,
-	383, 106,
-	389, 165,
-	480, 203,
-	463, 309,
-	390, 398,
-	542, 518,
-	531, 553,
-	550, 567,
-	566, 597,
-	565, 869,
-	532, 870,
-	532, 824,
-	413, 884
+	//create map boundries
+	int tabletop_no_bumpers[120] = {
+		269, 927,
+		270, 901,
+		126, 822,
+		122, 874,
+		89, 871,
+		84, 638,
+		87, 605,
+		101, 575,
+		125, 557,
+		141, 551,
+		140, 411,
+		149, 398,
+		89, 334,
+		101, 286,
+		122, 243,
+		147, 206,
+		253, 174,
+		264, 167,
+		265, 120,
+		254, 107,
+		204, 131,
+		153, 177,
+		126, 209,
+		102, 248,
+		86, 287,
+		71, 351,
+		63, 414,
+		53, 464,
+		55, 554,
+		59, 849,
+		21, 853,
+		19, 553,
+		21, 466,
+		25, 418,
+		41, 316,
+		75, 224,
+		107, 176,
+		168, 114,
+		264, 64,
+		327, 53,
+		394, 77,
+		385, 103,
+		390, 171,
+		483, 203,
+		461, 311,
+		393, 400,
+		413, 422,
+		407, 447,
+		449, 460,
+		497, 477,
+		544, 520,
+		532, 550,
+		550, 567,
+		566, 601,
+		567, 676,
+		567, 874,
+		532, 874,
+		528, 824,
+		386, 900,
+		383, 928
 	};
+	App->physics->CreateChain(0, 0, tabletop_no_bumpers, 120, false); //map walls
+
+	//create interactive static bodies
+	App->physics->CreateCircle(299, 230, 28, STATIC); //Sapphire
+	App->physics->CreateCircle(285, 315, 28, STATIC); //Ruby
+	App->physics->CreateCircle(386, 430, 28, STATIC); //Emmerald
+	App->physics->CreateCircle(380, 262, 28, STATIC); //Amethyst
+	App->physics->CreateCircle(207, 467, 28, STATIC); //Magic Well
+
+
+	//Static bumpers
+	int static_bumper_1[6] = {
+		428, 756,
+		477, 640,
+		483, 734
+	};
+	App->physics->CreateChain(0, 0, static_bumper_1, 6, false);
 	
-	App->physics->CreateChain(0, 0, tabletop_no_bumpers, 58, false);
+	int static_bumper_2[6] = {
+		227, 756,
+		172, 731,
+		177, 638
+	};
+	App->physics->CreateChain(0, 0, static_bumper_2, 6, false);
+
+
+	int static_bumper_3[12] = {
+		257, 322,
+		234, 329,
+		236, 339,
+		321, 365,
+		327, 356,
+		306, 329
+	};
+	App->physics->CreateChain(0, 0, static_bumper_3, 12, false);
+
+
+
+
+	//Static land masses
+	int landmass1[18] = {
+		120, 646,
+		130, 645,
+		133, 734,
+		144, 754,
+		250, 824,
+		226, 839,
+		136, 785,
+		122, 754,
+		120, 731
+	};
+	App->physics->CreateChain(0, 0, landmass1, 18, false);
 	
+	int landmass2[20] = {
+		401, 826,
+		427, 840,
+		507, 791,
+		521, 777,
+		533, 751,
+		533, 646,
+		521, 646,
+		521, 733,
+		508, 757,
+		481, 777
+	};
+	App->physics->CreateChain(0, 0, landmass2, 20, false);
 
 
+	//create interactive sensors
+	sensorheart1 = App->physics->CreateRectangleSensor(282, 140, 25, 25); //heart n1
+	sensorheart2 = App->physics->CreateRectangleSensor(326, 140, 25, 25); //heart n2
+	sensorheart3 = App->physics->CreateRectangleSensor(371, 140, 25, 25); //heart n3
 
+	//create all micro_sensors
+	sensorheart1 = App->physics->CreateRectangleSensor(192, 218, 15, 15); //top_left
+	sensorheart2 = App->physics->CreateRectangleSensor(222, 210, 15, 15);
+	sensorheart3 = App->physics->CreateRectangleSensor(252, 200, 15, 15);
+
+	micro_sensor4 = App->physics->CreateRectangleSensor(400, 200, 15, 15); //top_right
+	micro_sensor5 = App->physics->CreateRectangleSensor(430, 210, 15, 15);
+	micro_sensor6 = App->physics->CreateRectangleSensor(460, 218, 15, 15);
+
+	micro_sensor7 = App->physics->CreateRectangleSensor(247, 362, 15, 15); //middle
+	micro_sensor8 = App->physics->CreateRectangleSensor(277, 370, 15, 15);
+	micro_sensor9 = App->physics->CreateRectangleSensor(305, 379, 15, 15);
+
+	micro_sensor10 = App->physics->CreateRectangleSensor(162, 435, 15, 15); //left
+	micro_sensor11= App->physics->CreateRectangleSensor(162, 465, 15, 15);
+	micro_sensor12= App->physics->CreateRectangleSensor(162, 497, 15, 15);
+
+	micro_sensor13 = App->physics->CreateRectangleSensor(152, 712, 15, 15); //isolated in bottom lane
+	micro_sensor14 = App->physics->CreateRectangleSensor(503, 712, 15, 15);
 
 
 	return ret;
@@ -86,11 +201,12 @@ bool ModuleSceneIntro::CleanUp()
 
 	return true;
 }
+
 update_status ModuleSceneIntro::PreUpdate() {
 	// blit the background......
 	if (tabletop != NULL)
 	{
-		//App->renderer->Blit(tabletop, 0, 0);
+		App->renderer->Blit(tabletop, 0, 0);
 	}
 
 	return UPDATE_CONTINUE;
@@ -111,7 +227,7 @@ update_status ModuleSceneIntro::Update()
 
 	if(App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN)
 	{
-		circles.add(App->physics->CreateCircle(App->input->GetMouseX(), App->input->GetMouseY(), 25, DINAMIC));
+		circles.add(App->physics->CreateCircle(App->input->GetMouseX(), App->input->GetMouseY(), 15, DINAMIC));
 		circles.getLast()->data->listener = this;
 	}
 
@@ -155,7 +271,7 @@ update_status ModuleSceneIntro::Update()
 			10, 102,
 			29, 90,
 			0, 75,
-			30, 62
+			170, 40
 		};
 
 		ricks.add(App->physics->CreateChain(App->input->GetMouseX(), App->input->GetMouseY(), rick_head, 64));
