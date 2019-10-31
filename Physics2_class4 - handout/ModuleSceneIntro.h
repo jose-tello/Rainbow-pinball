@@ -85,6 +85,7 @@ public:
 
 
 	uint bonus_fx;
+	uint score;
 	p2Point<int> ray;
 	bool ray_on;
 };

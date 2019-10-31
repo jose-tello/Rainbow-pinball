@@ -34,6 +34,7 @@ bool ModuleSceneIntro::Start()
 	sfx_spritesheet = App->textures->Load("pinball/sfx_spritesheet.png");
 
 	bonus_fx = App->audio->LoadFx("pinball/bonus.wav");
+	score = App->audio->LoadFx("pinball/score.wav");
 
 
 	//create map boundries
@@ -440,7 +441,7 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 {
 	int x, y;
 
-	App->audio->PlayFx(bonus_fx);
+	App->audio->PlayFx(score);
 	if (bodyA != nullptr) { bodyA->shiny = true; }
 	if (bodyB != nullptr) { bodyB->shiny = true; }
 
