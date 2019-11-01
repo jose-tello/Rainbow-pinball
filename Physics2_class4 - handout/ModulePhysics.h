@@ -56,7 +56,8 @@ public:
 	PhysBody* CreateRectangle(int x, int y, int width, int height, BODYTYPE type);
 	PhysBody* CreateRectangleSensor(int x, int y, int width, int height);
 	PhysBody* CreateChain(int x, int y, int* points, int size, bool dynamic = true);
-	PhysBody* CreateBumper(int x, int y, int xr, int radius, int width, int height, bool flip);
+	PhysBody* CreateBumper(int x, int y, int xr, int radius, int* points, int size, float lowerAngle, float upperAngle);
+	PhysBody* CreatePoligon(int x, int y, int* points, int size, bool dynamic);
 
 	// b2ContactListener ---
 	void BeginContact(b2Contact* contact);

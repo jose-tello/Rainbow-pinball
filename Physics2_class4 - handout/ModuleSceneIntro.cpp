@@ -219,9 +219,29 @@ bool ModuleSceneIntro::Start()
 	interactables.add(micro_sensor13 = App->physics->CreateRectangleSensor(152, 712, 15, 15)); //isolated in bottom lane
 	interactables.add(micro_sensor14 = App->physics->CreateRectangleSensor(503, 712, 15, 15));
 
+	int lpoints[14] = {
+	22, 0,
+	97, 42,
+	97, 53,
+	85, 58,
+	6, 27,
+	0, 12,
+	5, 1
+	};
 
-	leftBumper = App->physics->CreateBumper(SCREEN_WIDTH * 0.5f - 105, 820, 10, 10, 80, 20, false);
-	rightBumper = App->physics->CreateBumper(SCREEN_WIDTH * 0.5f + 105, 820, 10, 10, 80, 20, true);
+	int rpoints[14] = {
+	75, 0,
+	0, 42,
+	0, 53,
+	12, 58,
+	91, 27,
+	97, 12,
+	92, 1
+	};
+
+
+	leftBumper = App->physics->CreateBumper(SCREEN_WIDTH * 0.5f - 103, 825, -10, 10, lpoints, 14, -0.30f, -0.02f);
+	rightBumper = App->physics->CreateBumper(SCREEN_WIDTH * 0.5f + 97, 825, -90, 10, rpoints, 14, 0.02f, 0.40f);
 
 	return ret;
 }

@@ -185,10 +185,14 @@ PhysBody* ModulePhysics::CreateRectangleSensor(int x, int y, int width, int heig
 PhysBody* ModulePhysics::CreateChain(int x, int y, int* points, int size, bool dynamic)
 {
 	b2BodyDef body;
+
 	if (dynamic == false) {
 		body.type = b2_staticBody;
 	}
-	else{ body.type = b2_dynamicBody; }
+
+	else{ 
+		body.type = b2_dynamicBody; 
+	}
 	body.position.Set(PIXEL_TO_METERS(x), PIXEL_TO_METERS(y));
 
 	
@@ -220,98 +224,62 @@ PhysBody* ModulePhysics::CreateChain(int x, int y, int* points, int size, bool d
 	return pbody;
 }
 
-PhysBody* ModulePhysics::CreateBumper(int x, int y, int xr, int radius, int width, int height, bool flip) {
+PhysBody* ModulePhysics::CreatePoligon(int x, int y, int* points, int size, bool dynamic) {
 
-	//Circle of the bumper
-	b2BodyDef circle;
-
-	circle.type = b2_staticBody;
-	
-	circle.position.Set(PIXEL_TO_METERS(x), PIXEL_TO_METERS(y));
-
-	b2Body* c = world->CreateBody(&circle);
-
-	b2CircleShape shapeCircle;
-	shapeCircle.m_radius = PIXEL_TO_METERS(radius);
-	b2FixtureDef fixtureCircle;
-	fixtureCircle.shape = &shapeCircle;
-
-	c->CreateFixture(&fixtureCircle);
-
-	
-	//Rectangle of the bumper
-	b2BodyDef rectangle;
-
-	rectangle.type = b2_dynamicBody;
-	
-	int auxX;
-	int auxY;
-	
-	if (!flip) {
-
-		auxX = x - xr;
-		
+	b2BodyDef body;
+	if (dynamic == false) {
+		body.type = b2_staticBody;
 	}
-
-	if (flip) {
-
-		auxX = x - 97;
+	else {
+		body.type = b2_dynamicBody;
 	}
-	
-	rectangle.position.Set(PIXEL_TO_METERS(auxX), PIXEL_TO_METERS(y));
+	body.position.Set(PIXEL_TO_METERS(x), PIXEL_TO_METERS(y));
 
-	b2Body* r = world->CreateBody(&rectangle);
-	
-	b2PolygonShape shapeRectangle;
-	
 
-	int points[14] = {
-	22, 0,
-	97, 42,
-	97, 53,
-	85, 58,
-	6, 27,
-	0, 12,
-	5, 1
-	};
+	b2Body* b = world->CreateBody(&body);
 
-	
-	if (flip) {
-		for (uint i = 0; i < BUMPER_POINTS; ++i)
-		{
-			points[i * 2] = points[i * 2] + 2*abs(SCREEN_WIDTH/2 - points[i * 2]) - 565;
-		}
+	b2PolygonShape shape;
 
-	}
-	
-	b2Vec2* p = new b2Vec2[BUMPER_POINTS];
+	b2Vec2* p = new b2Vec2[size / 2];
 
-	for (uint i = 0; i < BUMPER_POINTS; ++i)
+	for (uint i = 0; i < size / 2; ++i)
 	{
 		p[i].x = PIXEL_TO_METERS(points[i * 2 + 0]);
 		p[i].y = PIXEL_TO_METERS(points[i * 2 + 1]);
 	}
-	
-	shapeRectangle.Set(p, BUMPER_POINTS);
 
-	//delete p;
+	shape.Set(p, size / 2);
 
-	b2FixtureDef fixtureRectangle;
-	fixtureRectangle.shape = &shapeRectangle;
-	fixtureRectangle.density = 4.0f;
+	b2FixtureDef fixture;
+	fixture.shape = &shape;
+	fixture.density = 4.0f;
 
-	r->CreateFixture(&fixtureRectangle);
+	b->CreateFixture(&fixture);
+
+	delete p;
 
 	PhysBody* pbody = new PhysBody();
-	pbody->body = r;
-	r->SetUserData(pbody);
+	pbody->body = b;
+	b->SetUserData(pbody);
 	pbody->width = pbody->height = 0;
+
+	return pbody;
+}
+
+PhysBody* ModulePhysics::CreateBumper(int x, int y, int xr, int radius, int* points, int size, float lowerAngle, float upperAngle) {
+
+	int auxX = x + xr;
+	int auxY = y - radius;
+
+	PhysBody* cbody = CreateCircle(x, y, radius, STATIC);
+	PhysBody* pbody = CreatePoligon(auxX, auxY, points, size, true);
+
 
 	b2RevoluteJointDef jointDef;
 
-	jointDef.lowerAngle = -0.25f * b2_pi;
-	jointDef.upperAngle = 0.25f * b2_pi; 	jointDef.enableLimit = true;
-	jointDef.Initialize(c, r, { c->GetPosition().x, c->GetPosition().y });
+	jointDef.lowerAngle = lowerAngle * b2_pi;
+	jointDef.upperAngle = upperAngle* b2_pi; 	jointDef.enableLimit = true;
+	jointDef.Initialize(cbody->body, pbody->body, { cbody->body->GetPosition().x, cbody->body->GetPosition().y });
 	
 	b2RevoluteJoint* joint = (b2RevoluteJoint*)world->CreateJoint(&jointDef);
 
