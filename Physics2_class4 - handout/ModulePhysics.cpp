@@ -224,6 +224,7 @@ PhysBody* ModulePhysics::CreateChain(int x, int y, int* points, int size, bool d
 	return pbody;
 }
 
+
 PhysBody* ModulePhysics::CreatePoligon(int x, int y, int* points, int size, bool dynamic) {
 
 	b2BodyDef body;
@@ -278,7 +279,9 @@ PhysBody* ModulePhysics::CreateBumper(int x, int y, int xr, int radius, int* poi
 	b2RevoluteJointDef jointDef;
 
 	jointDef.lowerAngle = lowerAngle * b2_pi;
-	jointDef.upperAngle = upperAngle* b2_pi; 	jointDef.enableLimit = true;
+	jointDef.upperAngle = upperAngle* b2_pi; 
+	jointDef.enableLimit = true;
+
 	jointDef.Initialize(cbody->body, pbody->body, { cbody->body->GetPosition().x, cbody->body->GetPosition().y });
 	
 	b2RevoluteJoint* joint = (b2RevoluteJoint*)world->CreateJoint(&jointDef);

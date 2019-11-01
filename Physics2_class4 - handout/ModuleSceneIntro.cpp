@@ -68,8 +68,8 @@ bool ModuleSceneIntro::Start()
 		63, 414,
 		53, 464,
 		55, 554,
-		59, 849,
-		21, 853,
+		59, 930,
+		21, 930,
 		19, 553,
 		21, 466,
 		25, 418,
@@ -242,6 +242,31 @@ bool ModuleSceneIntro::Start()
 
 	leftBumper = App->physics->CreateBumper(SCREEN_WIDTH * 0.5f - 103, 825, -10, 10, lpoints, 14, -0.30f, -0.02f);
 	rightBumper = App->physics->CreateBumper(SCREEN_WIDTH * 0.5f + 97, 825, -90, 10, rpoints, 14, 0.02f, 0.40f);
+	
+
+
+	//ball_kicker
+	//we wanna make a piston. Check: https://www.iforce2d.net/b2dtut/joints-prismatic
+	
+	ball_kicker = App->physics->CreateRectangle(40, 880, 29, 30, DINAMIC); //Never change this
+	ball_kicker_pivot = App->physics->CreateRectangle(40, 930, 29, 10, STATIC);
+	
+	b2PrismaticJointDef kicker_def;
+	b2PrismaticJoint* kicker_joint;
+
+	kicker_def.bodyA = ball_kicker->body;
+	kicker_def.bodyB = ball_kicker_pivot->body;
+	kicker_def.collideConnected = false;
+	kicker_def.localAxisA.Set(0, -1);
+
+	kicker_def.localAnchorA.Set(0, 0);
+	kicker_def.localAnchorB.Set(0, 0);
+
+	kicker_def.enableLimit = true;;
+	kicker_def.lowerTranslation = -1.4;
+	kicker_def.upperTranslation = 1.0;
+
+	kicker_joint = (b2PrismaticJoint*)App->physics->world->CreateJoint(&kicker_def);
 
 	return ret;
 }
@@ -262,6 +287,18 @@ update_status ModuleSceneIntro::PreUpdate() {
 		App->renderer->Blit(tabletop, 0, 0);
 	}
 
+	//blit the kicker + keep it up......
+	ball_kicker->body->ApplyForce({ 0,-10 }, { 0, 0 }, true);
+	
+	int x, y;
+	ball_kicker->GetPosition(x, y);
+	x -= ball_kicker->width;
+	
+	if (ball_kicker != NULL)
+	{
+		App->renderer->Blit(launcher, x, y,NULL,1.0f);
+	}
+
 	return UPDATE_CONTINUE;
 }
 
@@ -278,7 +315,17 @@ update_status ModuleSceneIntro::Update()
 	{
 		rightBumper->body->ApplyAngularImpulse(50, true);
 	}
-	
+
+	if (App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT)
+	{
+		ball_kicker->body->ApplyForce({ 0,15 }, { 0, 0 }, true); //charge
+	}
+
+	if (App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_UP)
+	{
+		ball_kicker->body->ApplyForce({ 0,-250 }, { 0, 0 }, true); //fire up baby
+	}
+
 	if(App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)
 	{
 		ray_on = !ray_on;

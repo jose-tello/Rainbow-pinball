@@ -59,13 +59,16 @@ public:
 	PhysBody* CreateBumper(int x, int y, int xr, int radius, int* points, int size, float lowerAngle, float upperAngle);
 	PhysBody* CreatePoligon(int x, int y, int* points, int size, bool dynamic);
 
+
 	// b2ContactListener ---
 	void BeginContact(b2Contact* contact);
 
-private:
-
-	bool debug;
+	//World
 	b2World* world;
+
+private:
+	
+	bool debug;
 	b2MouseJoint* mouse_joint;
 	b2Body* ground;
 };

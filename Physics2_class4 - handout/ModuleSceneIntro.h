@@ -82,6 +82,10 @@ public:
 	PhysBody* bumper1;
 	PhysBody* circleBumper1;
 
+	PhysBody* ball_kicker;
+	PhysBody* ball_kicker_pivot;
+	
+
 
 
 	uint bonus_fx;
