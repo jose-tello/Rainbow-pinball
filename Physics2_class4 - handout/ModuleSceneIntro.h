@@ -82,9 +82,13 @@ public:
 	PhysBody* bumper1;
 	PhysBody* circleBumper1;
 
+	PhysBody* ball_kicker;
+	PhysBody* ball_kicker_pivot;
+	
 
 
-	uint bonus_fx;
+
+	uint bumpersound;
 	uint score;
 	p2Point<int> ray;
 	bool ray_on;

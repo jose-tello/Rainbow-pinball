@@ -33,7 +33,7 @@ bool ModuleSceneIntro::Start()
 	tabletop = App->textures->Load("pinball/tabletop_no_bumpers.png");
 	sfx_spritesheet = App->textures->Load("pinball/sfx_spritesheet.png");
 
-	bonus_fx = App->audio->LoadFx("pinball/bonus.wav");
+	bumpersound = App->audio->LoadFx("pinball/bonus.wav");
 	score = App->audio->LoadFx("pinball/score.wav");
 
 
@@ -68,8 +68,8 @@ bool ModuleSceneIntro::Start()
 		63, 414,
 		53, 464,
 		55, 554,
-		59, 849,
-		21, 853,
+		59, 930,
+		21, 930,
 		19, 553,
 		21, 466,
 		25, 418,
@@ -242,7 +242,19 @@ bool ModuleSceneIntro::Start()
 
 	leftBumper = App->physics->CreateBumper(SCREEN_WIDTH * 0.5f - 103, 825, -10, 10, lpoints, 14, -0.30f, -0.02f);
 	rightBumper = App->physics->CreateBumper(SCREEN_WIDTH * 0.5f + 97, 825, -90, 10, rpoints, 14, 0.02f, 0.40f);
+	
 
+
+	//ball_kicker
+	
+	
+	ball_kicker = App->physics->CreateRectangle(42, 885, 29, 30, DINAMIC); //Never change this
+	ball_kicker_pivot = App->physics->CreateRectangle(42, 930, 29, 10, STATIC);
+	
+	b2PrismaticJointDef kicker_def;
+	b2PrismaticJoint* kicker_joint = nullptr;
+	App->physics->CreatePiston(ball_kicker, ball_kicker_pivot, kicker_def, kicker_joint);
+	
 	return ret;
 }
 
@@ -262,6 +274,18 @@ update_status ModuleSceneIntro::PreUpdate() {
 		App->renderer->Blit(tabletop, 0, 0);
 	}
 
+	//blit the kicker + keep it up......
+	ball_kicker->body->ApplyForce({ 0,-10 }, { 0, 0 }, true);
+	
+	int x, y;
+	ball_kicker->GetPosition(x, y);
+	x -= ball_kicker->width;
+	
+	if (ball_kicker != NULL)
+	{
+		App->renderer->Blit(launcher, x, y,NULL,1.0f);
+	}
+
 	return UPDATE_CONTINUE;
 }
 
@@ -278,7 +302,17 @@ update_status ModuleSceneIntro::Update()
 	{
 		rightBumper->body->ApplyAngularImpulse(50, true);
 	}
-	
+
+	if (App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT)
+	{
+		ball_kicker->body->ApplyForce({ 0,15 }, { 0, 0 }, true); //charge
+	}
+
+	if (App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_UP)
+	{
+		ball_kicker->body->ApplyForce({ 0,-1000 }, { 0, 0 }, true); //fire up baby
+	}
+
 	if(App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)
 	{
 		ray_on = !ray_on;
@@ -355,7 +389,8 @@ update_status ModuleSceneIntro::Update()
 	{
 		int x, y;
 		c->data->GetPosition(x, y);
-		App->renderer->Blit(circle, x, y, NULL, 1.0f, c->data->GetRotation());
+		//if(c->data->Contains(App->input->GetMouseX(), App->input->GetMouseY()))
+			App->renderer->Blit(circle, x, y, NULL, 1.0f, c->data->GetRotation());
 		c = c->next;
 	}
 
@@ -394,6 +429,7 @@ update_status ModuleSceneIntro::Update()
 	while (c != NULL && d != NULL)
 	{
 		if (c->data->shiny) {
+			App->audio->PlayFx(score);
 			int x, y;
 			c->data->GetPosition(x, y);
 			App->renderer->Blit(sfx_spritesheet, x, y, d->data);
@@ -409,6 +445,7 @@ update_status ModuleSceneIntro::Update()
 	while (c != NULL && d != NULL)
 	{
 		if (c->data->shiny) {
+			App->audio->PlayFx(bumpersound);
 			int x, y;
 			c->data->GetPosition(x, y);
 			App->renderer->Blit(sfx_spritesheet, x, y, d->data);
@@ -460,7 +497,7 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 {
 	int x, y;
 
-	App->audio->PlayFx(score);
+	
 	if (bodyA != nullptr) { bodyA->shiny = true; }
 	if (bodyB != nullptr) { bodyB->shiny = true; }
 

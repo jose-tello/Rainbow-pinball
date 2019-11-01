@@ -1,5 +1,6 @@
 #pragma once
 #include "Module.h"
+#include "ModuleSceneIntro.h"
 #include "Globals.h"
 #include "Box2D/Box2D/Box2D.h"
 
@@ -58,14 +59,18 @@ public:
 	PhysBody* CreateChain(int x, int y, int* points, int size, bool dynamic = true);
 	PhysBody* CreateBumper(int x, int y, int xr, int radius, int* points, int size, float lowerAngle, float upperAngle);
 	PhysBody* CreatePoligon(int x, int y, int* points, int size, bool dynamic);
+	void CreatePiston(PhysBody* din_b, PhysBody* stat_b, b2PrismaticJointDef def, b2PrismaticJoint* joint);
+
 
 	// b2ContactListener ---
 	void BeginContact(b2Contact* contact);
 
-private:
-
-	bool debug;
+	//World
 	b2World* world;
+
+private:
+	
+	bool debug;
 	b2MouseJoint* mouse_joint;
 	b2Body* ground;
 };
