@@ -33,7 +33,7 @@ bool ModuleSceneIntro::Start()
 	tabletop = App->textures->Load("pinball/tabletop_no_bumpers.png");
 	sfx_spritesheet = App->textures->Load("pinball/sfx_spritesheet.png");
 
-	bonus_fx = App->audio->LoadFx("pinball/bonus.wav");
+	bumpersound = App->audio->LoadFx("pinball/bonus.wav");
 	score = App->audio->LoadFx("pinball/score.wav");
 
 
@@ -246,28 +246,15 @@ bool ModuleSceneIntro::Start()
 
 
 	//ball_kicker
-	//we wanna make a piston. Check: https://www.iforce2d.net/b2dtut/joints-prismatic
 	
-	ball_kicker = App->physics->CreateRectangle(40, 880, 29, 30, DINAMIC); //Never change this
-	ball_kicker_pivot = App->physics->CreateRectangle(40, 930, 29, 10, STATIC);
+	
+	ball_kicker = App->physics->CreateRectangle(42, 885, 29, 30, DINAMIC); //Never change this
+	ball_kicker_pivot = App->physics->CreateRectangle(42, 930, 29, 10, STATIC);
 	
 	b2PrismaticJointDef kicker_def;
-	b2PrismaticJoint* kicker_joint;
-
-	kicker_def.bodyA = ball_kicker->body;
-	kicker_def.bodyB = ball_kicker_pivot->body;
-	kicker_def.collideConnected = false;
-	kicker_def.localAxisA.Set(0, -1);
-
-	kicker_def.localAnchorA.Set(0, 0);
-	kicker_def.localAnchorB.Set(0, 0);
-
-	kicker_def.enableLimit = true;;
-	kicker_def.lowerTranslation = -1.4;
-	kicker_def.upperTranslation = 1.0;
-
-	kicker_joint = (b2PrismaticJoint*)App->physics->world->CreateJoint(&kicker_def);
-
+	b2PrismaticJoint* kicker_joint = nullptr;
+	App->physics->CreatePiston(ball_kicker, ball_kicker_pivot, kicker_def, kicker_joint);
+	
 	return ret;
 }
 
@@ -323,7 +310,7 @@ update_status ModuleSceneIntro::Update()
 
 	if (App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_UP)
 	{
-		ball_kicker->body->ApplyForce({ 0,-250 }, { 0, 0 }, true); //fire up baby
+		ball_kicker->body->ApplyForce({ 0,-1000 }, { 0, 0 }, true); //fire up baby
 	}
 
 	if(App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)
@@ -402,7 +389,7 @@ update_status ModuleSceneIntro::Update()
 	{
 		int x, y;
 		c->data->GetPosition(x, y);
-		if(c->data->Contains(App->input->GetMouseX(), App->input->GetMouseY()))
+		//if(c->data->Contains(App->input->GetMouseX(), App->input->GetMouseY()))
 			App->renderer->Blit(circle, x, y, NULL, 1.0f, c->data->GetRotation());
 		c = c->next;
 	}
@@ -442,6 +429,7 @@ update_status ModuleSceneIntro::Update()
 	while (c != NULL && d != NULL)
 	{
 		if (c->data->shiny) {
+			App->audio->PlayFx(score);
 			int x, y;
 			c->data->GetPosition(x, y);
 			App->renderer->Blit(sfx_spritesheet, x, y, d->data);
@@ -457,6 +445,7 @@ update_status ModuleSceneIntro::Update()
 	while (c != NULL && d != NULL)
 	{
 		if (c->data->shiny) {
+			App->audio->PlayFx(bumpersound);
 			int x, y;
 			c->data->GetPosition(x, y);
 			App->renderer->Blit(sfx_spritesheet, x, y, d->data);
@@ -508,7 +497,7 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 {
 	int x, y;
 
-	App->audio->PlayFx(score);
+	
 	if (bodyA != nullptr) { bodyA->shiny = true; }
 	if (bodyB != nullptr) { bodyB->shiny = true; }
 

@@ -289,6 +289,29 @@ PhysBody* ModulePhysics::CreateBumper(int x, int y, int xr, int radius, int* poi
 	return pbody;
 }
 
+void ModulePhysics::CreatePiston(PhysBody* din_b, PhysBody* stat_b, b2PrismaticJointDef def, b2PrismaticJoint* joint) {
+	
+	//wanna make a piston? Check: https://www.iforce2d.net/b2dtut/joints-prismatic
+	
+	//This specific function will make a vertical piston
+
+	def.bodyA = din_b->body;
+	def.bodyB = stat_b->body;
+	def.collideConnected = false;
+	def.localAxisA.Set(0, -1);
+
+	def.localAnchorA.Set(0, 0);
+	def.localAnchorB.Set(0, 0);
+
+	def.enableLimit = true;;
+	def.lowerTranslation = -1.3;
+	def.upperTranslation = 1.0;
+
+	joint = (b2PrismaticJoint*)App->physics->world->CreateJoint(&def);
+
+
+}
+
 // 
 update_status ModulePhysics::PostUpdate()
 {

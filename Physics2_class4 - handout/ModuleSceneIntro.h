@@ -88,7 +88,7 @@ public:
 
 
 
-	uint bonus_fx;
+	uint bumpersound;
 	uint score;
 	p2Point<int> ray;
 	bool ray_on;
