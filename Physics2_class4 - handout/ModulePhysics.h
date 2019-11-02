@@ -55,6 +55,7 @@ public:
 
 	PhysBody* CreateCircle(int x, int y, int radius, BODYTYPE type);
 	PhysBody* CreateRectangle(int x, int y, int width, int height, BODYTYPE type);
+	PhysBody* CreateAngledRectangle(int x, int y, int width, int height, BODYTYPE type, float angle);
 	PhysBody* CreateRectangleSensor(int x, int y, int width, int height);
 	PhysBody* CreateChain(int x, int y, int* points, int size, bool dynamic = true);
 	PhysBody* CreateBumper(int x, int y, int xr, int radius, int* points, int size, float lowerAngle, float upperAngle);
