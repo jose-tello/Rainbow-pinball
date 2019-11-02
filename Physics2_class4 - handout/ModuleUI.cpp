@@ -25,13 +25,13 @@ bool ModuleUI::Start()
 	typography1 = App->fonts->Load("pinball/Font_name.png", "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789~·!@#$%^&*()-+=[]{}|:;ç'<>,./? ", 1);
 	numbers = App->fonts->Load("pinball/puntuationNumbers.png", "0123456789", 1);
 	graphics = App->textures->Load("pinball/ui_pinball.png");
-
-
 	
+
 	puntuationUI.x = 0;
 	puntuationUI.y = 0;
 	puntuationUI.w = 270;
 	puntuationUI.h = 100;
+
 
 	ballsRemaining.x = 29;
 	ballsRemaining.y = 115;
@@ -44,12 +44,11 @@ bool ModuleUI::Start()
 }
 
 // Load assets
-bool ModuleUI::CleanUp()
-{
+bool ModuleUI::CleanUp() {
 
 	App->textures->Unload(graphics);
 	App->fonts->UnLoad(numbers);
-	
+	App->fonts->UnLoad(typography1);
 
 	graphics = nullptr;
 
@@ -63,6 +62,18 @@ update_status ModuleUI::Update() {
 	if (App->input->GetKey(SDL_SCANCODE_F2) == KEY_DOWN)
 	{
 		SumPuntuation(5);
+	}
+
+	if (App->input->GetKey(SDL_SCANCODE_4) == KEY_DOWN)
+	{
+		//lose a life
+		App->player->lifes--;
+	}
+
+	if (App->input->GetKey(SDL_SCANCODE_5) == KEY_DOWN)
+	{
+		//lose a life
+		App->player->lifes++;
 	}
 
 	App->renderer->Blit(graphics, 5, 10, &puntuationUI);

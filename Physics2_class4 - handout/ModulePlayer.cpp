@@ -79,14 +79,28 @@ bool ModulePlayer::Start()
 }
 
 // Unload assets
-bool ModulePlayer::CleanUp()
-{
+bool ModulePlayer::CleanUp() {
 
 	App->textures->Unload(sfx_spritesheet);
 	App->textures->Unload(launcher);
 	
 	sfx_spritesheet = nullptr;
 	launcher = nullptr;
+
+	player_flipers.clear();
+	player_flipers_rects.clear();
+
+	delete ball_kicker;
+	ball_kicker = nullptr;
+	delete ball_kicker_pivot;
+	ball_kicker_pivot = nullptr;
+
+	delete leftFliper;
+	leftFliper = nullptr;
+	delete rightFliper;
+	rightFliper = nullptr;
+	delete leftUpFliper;
+	leftUpFliper = nullptr;
 
 	LOG("Unloading player");
 

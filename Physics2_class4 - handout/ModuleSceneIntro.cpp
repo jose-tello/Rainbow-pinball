@@ -216,10 +216,6 @@ bool ModuleSceneIntro::Start()
 	
 	//create "ball death trigger"
 	death_trigger = App->physics->CreateRectangleSensor(328, 930, 110, 5);
-	
-
-	
-
 
 	//first ball
 	circles.add(App->physics->CreateCircle(30, 810, 15, DINAMIC));
@@ -229,9 +225,130 @@ bool ModuleSceneIntro::Start()
 }
 
 // Load assets
-bool ModuleSceneIntro::CleanUp()
-{
+bool ModuleSceneIntro::CleanUp() {
+
 	LOG("Unloading Intro scene");
+
+	circles.clear();
+	boxes.clear();
+	interactables.clear();
+	interactable_bumpers.clear();
+	score_interactables.clear();
+
+	interactables_list.clear();
+	score_interactables_list.clear();
+	interactable_bumpers_list.clear();
+
+	delete sensorheart1;
+	sensorheart1 = nullptr;
+
+	delete sensorheart2;
+	sensorheart2 = nullptr;
+
+	delete sensorheart3;
+	sensorheart3 = nullptr;
+
+	delete micro_sensor1;
+	micro_sensor1 = nullptr;
+
+	delete micro_sensor2;
+	micro_sensor2 = nullptr;
+
+	delete micro_sensor3;
+	micro_sensor3 = nullptr;
+
+	delete micro_sensor4;
+	micro_sensor4 = nullptr;
+	
+	delete micro_sensor5;
+	micro_sensor5 = nullptr;
+
+	delete micro_sensor6;
+	micro_sensor6 = nullptr;
+	
+	delete micro_sensor7;
+	micro_sensor7 = nullptr;
+
+	delete micro_sensor8;
+	micro_sensor8 = nullptr;
+	
+	delete micro_sensor9;
+	micro_sensor9 = nullptr;
+	
+	delete micro_sensor10;
+	micro_sensor10 = nullptr;
+
+	delete micro_sensor11;
+	micro_sensor11 = nullptr;
+	
+	delete micro_sensor12;
+	micro_sensor12 = nullptr;
+
+	delete micro_sensor13;
+	micro_sensor13 = nullptr;
+
+	delete micro_sensor14;
+	micro_sensor14 = nullptr;
+
+	delete land_mass1;
+	land_mass1 = nullptr;
+
+	delete land_mass2;
+	land_mass2 = nullptr;
+
+	delete trd_static_bumper;
+	trd_static_bumper = nullptr;
+
+	delete fst_static_bumper;
+	fst_static_bumper = nullptr;
+
+	delete snd_static_bumper;
+	snd_static_bumper = nullptr;
+
+	delete ruby_b;
+	ruby_b = nullptr;
+
+	delete sapphire_b;
+	sapphire_b = nullptr;
+	
+	delete emmerald_b;
+	emmerald_b = nullptr;
+
+	delete amethyst_b;
+	amethyst_b = nullptr;
+
+	delete magic_Well_b;
+	magic_Well_b = nullptr;
+
+	delete death_trigger;
+	death_trigger = nullptr;
+
+	delete lifesaver1;
+	lifesaver1 = nullptr;
+
+	delete lifesaver2;
+	lifesaver2 = nullptr;
+
+	delete platform1;
+	platform1 = nullptr;
+
+	delete platform2;
+	platform2 = nullptr;
+
+	delete bumper1;
+	bumper1 = nullptr;
+
+	delete circleBumper1;
+	circleBumper1 = nullptr;
+
+	App->textures->Unload(circle);
+	circle = nullptr;
+	App->textures->Unload(tabletop);
+	tabletop = nullptr;
+	App->textures->Unload(ball);
+	ball = nullptr;
+	App->textures->Unload(sfx_spritesheet);
+	sfx_spritesheet = nullptr;
 
 	return true;
 }
@@ -243,8 +360,6 @@ update_status ModuleSceneIntro::PreUpdate() {
 	{
 		App->renderer->Blit(tabletop, 0, 0);
 	}
-
-	
 
 	return UPDATE_CONTINUE;
 }
@@ -270,21 +385,6 @@ update_status ModuleSceneIntro::Update() {
 		circles.getFirst()->data->body->SetLinearVelocity(b2Vec2(0, 0));
 		circles.getFirst()->data->body->SetAngularVelocity(0);
 	}
-
-
-	if (App->input->GetKey(SDL_SCANCODE_4) == KEY_DOWN)
-	{
-	//lose a life
-		App->player->lifes--; 
-	}
-
-	if (App->input->GetKey(SDL_SCANCODE_5) == KEY_DOWN)
-	{
-		//reset velocity
-		circles.getFirst()->data->body->SetLinearVelocity(b2Vec2(0, 0));
-		circles.getFirst()->data->body->SetAngularVelocity(0);
-	}
-
 
 	if (App->input->GetKey(SDL_SCANCODE_8) == KEY_REPEAT) //lower volume
 	{
