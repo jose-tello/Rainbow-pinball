@@ -23,7 +23,7 @@ public:
 
 public:
 	p2List<PhysBody*> circles;
-	p2List<PhysBody*> boxes;
+	p2List<PhysBody*> platforms;
 	p2List<PhysBody*> interactables; 
 	p2List<PhysBody*> hearts;
 	p2List<PhysBody*> interactable_bumpers;
@@ -80,6 +80,7 @@ public:
 	SDL_Texture* tabletop;
 	SDL_Texture* ball;
 	SDL_Texture* sfx_spritesheet;
+	SDL_Texture* platform;
 
 	SDL_Rect ruby;
 	SDL_Rect sapphire;
