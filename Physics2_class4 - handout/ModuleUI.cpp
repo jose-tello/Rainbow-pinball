@@ -25,13 +25,17 @@ bool ModuleUI::Start()
 	numbers = App->fonts->Load("pinball/puntuationNumbers.png", "0123456789", 1);
 	graphics = App->textures->Load("pinball/ui_pinball.png");
 
-	
 
+	
 	puntuationUI.x = 0;
 	puntuationUI.y = 0;
 	puntuationUI.w = 270;
 	puntuationUI.h = 100;
 
+	ballsRemaining.x = 29;
+	ballsRemaining.y = 115;
+	ballsRemaining.w = 17;
+	ballsRemaining.h = 16;
 
 	int currentPuntuation = 0;
 
@@ -64,6 +68,7 @@ update_status ModuleUI::Update() {
 
 	App->renderer->Blit(graphics, 5, 10, &puntuationUI);
 	BlitPuntuation();
+	BlitLives();
 
 	return UPDATE_CONTINUE;
 }
@@ -88,3 +93,10 @@ void ModuleUI::BlitPuntuation() {
 	App->fonts->BlitText(240 - x * App->fonts->fonts[0].char_w, 60, 0, playerPuntuation);
 }
 
+void ModuleUI::BlitLives() {
+	for (int i = 0; i < App->player->lifes-1; i++)
+	{
+		App->renderer->Blit(graphics, 239 - 24 * i, 33, &ballsRemaining);
+	}
+	
+}

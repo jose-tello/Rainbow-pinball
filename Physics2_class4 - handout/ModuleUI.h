@@ -25,6 +25,7 @@ private:
 	
 	void GetPuntuations();
 	void BlitPuntuation();
+	void BlitLives();
 	
 	
 
@@ -37,6 +38,7 @@ public:
 	bool timeOver;
 
 	SDL_Texture* graphics = nullptr;
+
 	SDL_Rect puntuationUI;
 	SDL_Rect ballsRemaining;
 	

@@ -397,6 +397,12 @@ update_status ModuleSceneIntro::Update()
 		App->player->lifes--; 
 	}
 
+	if (App->input->GetKey(SDL_SCANCODE_5) == KEY_DOWN)
+	{
+		//lose a life
+		App->player->lifes++;
+	}
+
 	// Prepare for raycast ------------------------------------------------------
 	
 	iPoint mouse;
@@ -577,10 +583,6 @@ update_status ModuleSceneIntro::PostUpdate() {
 	return UPDATE_CONTINUE;
 
 	//we do not reset score_interactable: those are meant to stay shiny!
-
-
-
-	
 }
 
 void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
