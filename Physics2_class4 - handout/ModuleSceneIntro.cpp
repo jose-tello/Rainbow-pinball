@@ -39,6 +39,7 @@ bool ModuleSceneIntro::Start()
 
 	bumpersound = App->audio->LoadFx("pinball/bonus.wav");
 	score = App->audio->LoadFx("pinball/score.wav");
+	lost_ball = App->audio->LoadFx("pinball/lost_ball.wav");
 	
 
 
@@ -173,8 +174,8 @@ bool ModuleSceneIntro::Start()
 	142, 757,
 	224, 809,
 	211, 818,
-	217, 840,
-	135, 784,
+	217, 832,
+	130, 780,
 	120, 747
 	};
 	land_mass1 = App->physics->CreateChain(0, 0, landmass1, 18, false);
@@ -187,7 +188,7 @@ bool ModuleSceneIntro::Start()
 	142 + 2 * (SCREEN_WIDTH /2 -142 + 15), 757,
 	224 + 2 * (SCREEN_WIDTH /2 -224 + 15), 809,
 	211 + 2 * (SCREEN_WIDTH /2 -211 + 15), 818,
-	217 + 2 * (SCREEN_WIDTH /2 -217 + 15), 840,
+	217 + 2 * (SCREEN_WIDTH /2 -217 + 15), 832,
 	135 + 2 * (SCREEN_WIDTH /2 -135 + 15), 784,
 	120 + 2 * (SCREEN_WIDTH /2 -120 + 15), 747
 	};
@@ -225,6 +226,9 @@ bool ModuleSceneIntro::Start()
 
 	score_interactables.add(micro_sensor13 = App->physics->CreateRectangleSensor(155, 716, 15, 15)); //isolated in bottom lane
 	score_interactables.add(micro_sensor14 = App->physics->CreateRectangleSensor(506, 716, 15, 15));
+
+	//create "ball death trigger"
+	death_trigger = App->physics->CreateRectangleSensor(328, 930, 110, 5);
 
 	int lpoints[14] = {
 	22, 0,
@@ -334,8 +338,13 @@ update_status ModuleSceneIntro::Update()
 
 	if(App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN)
 	{
-		circles.add(App->physics->CreateCircle(App->input->GetMouseX(), App->input->GetMouseY(), 15, DINAMIC));
-		circles.getLast()->data->listener = this;
+		//circles.add(App->physics->CreateCircle(App->input->GetMouseX(), App->input->GetMouseY(), 15, DINAMIC));
+		//circles.getLast()->data->listener = this;
+
+		//back to original pos
+		circles.getFirst()->data->body->SetTransform(b2Vec2(PIXEL_TO_METERS(30), PIXEL_TO_METERS(810)), 0);
+		circles.getFirst()->data->body->SetLinearVelocity(b2Vec2(0, 0));
+		circles.getFirst()->data->body->SetAngularVelocity(0);
 	}
 
 	if(App->input->GetKey(SDL_SCANCODE_2) == KEY_DOWN)
@@ -400,7 +409,25 @@ update_status ModuleSceneIntro::Update()
 	fVector normal(0.0f, 0.0f);
 
 	// All draw functions ------------------------------------------------------
+
 	p2List_item<PhysBody*>* c = circles.getFirst();
+	//circles = our ball
+	
+	if (death_trigger->interacted == true) {
+		
+		death_trigger->interacted = false; //reset bool
+
+		App->player->lifes--;
+
+		if (App->player->lifes > 0) { App->audio->PlayFx(lost_ball); } //if its not game over, play a sound
+
+		//send ball back to original pos
+		circles.getFirst()->data->body->SetTransform(b2Vec2(PIXEL_TO_METERS(30), PIXEL_TO_METERS(810)), 0);
+		circles.getFirst()->data->body->SetLinearVelocity(b2Vec2(0, 0));
+		circles.getFirst()->data->body->SetAngularVelocity(0);
+	}
+	
+	
 	
 	
 	while(c != NULL)
@@ -408,7 +435,8 @@ update_status ModuleSceneIntro::Update()
 		int x, y;
 		c->data->GetPosition(x, y);
 		//if(c->data->Contains(App->input->GetMouseX(), App->input->GetMouseY()))
-		App->renderer->Blit(circle, x, y, NULL, 1.0f, c->data->GetRotation());
+			App->renderer->Blit(circle, x, y, NULL, 1.0f, c->data->GetRotation());
+
 		c = c->next;
 	}
 
@@ -446,7 +474,7 @@ update_status ModuleSceneIntro::Update()
 
 	while (c != NULL && d != NULL)
 	{
-		if (c->data->shiny) {
+		if (c->data->interacted) {
 			App->audio->PlayFx(score);
 			int x, y;
 			c->data->GetPosition(x, y);
@@ -462,7 +490,7 @@ update_status ModuleSceneIntro::Update()
 	d = score_interactables_list.getFirst();
 	while (c != NULL && d != NULL)
 	{
-		if (c->data->shiny) {
+		if (c->data->interacted) {
 			int x, y;
 			c->data->GetPosition(x, y);
 			App->renderer->Blit(sfx_spritesheet, x, y, d->data);
@@ -477,7 +505,7 @@ update_status ModuleSceneIntro::Update()
 	d = interactable_bumpers_list.getFirst();
 	while (c != NULL && d != NULL)
 	{
-		if (c->data->shiny) {
+		if (c->data->interacted) {
 			App->audio->PlayFx(bumpersound);
 			int x, y;
 			c->data->GetPosition(x, y);
@@ -511,19 +539,29 @@ update_status ModuleSceneIntro::PostUpdate() {
 
 	
 	while (c != NULL) {
-		c->data->shiny = false;
+
+		c->data->interacted = false;
 		c = c->next;
 	}
 	c = interactable_bumpers.getFirst();
 
 	while (c != NULL) {
 
-		c->data->shiny = false;
+		c->data->interacted = false;
 		c = c->next;
 	}
+
+	c = circles.getFirst();
+	while (c != NULL) {
+
+		c->data->interacted = false;
+		c = c->next;
+	}
+
 	return UPDATE_CONTINUE;
 
 	//we do not reset score_interactable: those are meant to stay shiny!
+
 
 
 	
@@ -534,8 +572,13 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 	int x, y;
 
 	
-	if (bodyA != nullptr) { bodyA->shiny = true; }
-	if (bodyB != nullptr) { bodyB->shiny = true; }
+	if (bodyA != nullptr) { bodyA->interacted = true; }
+	if (bodyB != nullptr) { bodyB->interacted = true; }
 
 
+	if (bodyA == death_trigger || bodyB == death_trigger) {
+		
+			
+				
+	}
 }
