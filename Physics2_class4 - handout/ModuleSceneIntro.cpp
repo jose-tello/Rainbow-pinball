@@ -230,6 +230,10 @@ bool ModuleSceneIntro::Start()
 	//create "ball death trigger"
 	death_trigger = App->physics->CreateRectangleSensor(328, 930, 110, 5);
 
+
+
+	//Player bumpers
+
 	int lpoints[14] = {
 	22, 0,
 	97, 42,
@@ -252,9 +256,15 @@ bool ModuleSceneIntro::Start()
 
 
 	leftBumper = App->physics->CreateBumper(SCREEN_WIDTH * 0.5f -82, 828, -10, 10, lpoints, 14, -0.30f, -0.02f);
-	rightBumper = App->physics->CreateBumper(SCREEN_WIDTH * 0.5f + 117, 828, -90, 10, rpoints, 14, 0.02f, 0.40f);
+	player_bumpers.add(leftBumper);
+	player_bumper_left.x = 120; player_bumper_left.y = 61; player_bumper_left.w = 98; player_bumper_left.h = 59;
+	player_bumpers_list.add(&player_bumper_left);
 	
-
+	
+	rightBumper = App->physics->CreateBumper(SCREEN_WIDTH * 0.5f + 117, 828, -90, 10, rpoints, 14, 0.02f, 0.40f);
+	player_bumpers.add(rightBumper);
+	player_bumper_right.x = 120; player_bumper_right.y = 0; player_bumper_right.w = 98; player_bumper_right.h = 59;
+	player_bumpers_list.add(&player_bumper_right);
 
 	//ball_kicker
 	
@@ -511,6 +521,19 @@ update_status ModuleSceneIntro::Update()
 			c->data->GetPosition(x, y);
 			App->renderer->Blit(sfx_spritesheet, x, y, d->data);
 		}
+		c = c->next;
+		d = d->next;
+	}
+	
+	//player bumpers. those move.
+	c = player_bumpers.getFirst();
+	d = player_bumpers_list.getFirst();
+	while (c != NULL && d != NULL)
+	{
+			int x, y;
+			c->data->GetPosition(x, y);
+			App->renderer->Blit(sfx_spritesheet, x, y, d->data,1.0f,c->data->GetRotation(),0,0);
+		
 		c = c->next;
 		d = d->next;
 	}
