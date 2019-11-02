@@ -37,10 +37,12 @@ bool ModuleSceneIntro::Start()
 	tabletop = App->textures->Load("pinball/tabletop_no_bumpers.png");
 	sfx_spritesheet = App->textures->Load("pinball/sfx_spritesheet.png");
 
+	background_music = App->audio->PlayMusic("pinball/my_little_pony.wav", 3);
 	bumpersound = App->audio->LoadFx("pinball/bonus.wav");
 	score = App->audio->LoadFx("pinball/score.wav");
 	lost_ball = App->audio->LoadFx("pinball/lost_ball.wav");
 	
+
 
 
 	//create map boundries
@@ -337,6 +339,19 @@ update_status ModuleSceneIntro::Update()
 		circles.getFirst()->data->body->SetLinearVelocity(b2Vec2(0, 0));
 		circles.getFirst()->data->body->SetAngularVelocity(0);
 	}
+	if (App->input->GetKey(SDL_SCANCODE_8) == KEY_REPEAT) //lower volume
+	{
+		int x = Mix_VolumeMusic(-1); //-1 returns the actual value
+		Mix_VolumeMusic(x-1);
+		
+	}
+	if (App->input->GetKey(SDL_SCANCODE_9) == KEY_REPEAT) //up volume
+	{
+		int x = Mix_VolumeMusic(-1); //-1 returns the actual value
+		Mix_VolumeMusic(x+1);
+
+	}
+
 	// Prepare for raycast ------------------------------------------------------
 	
 	iPoint mouse;
