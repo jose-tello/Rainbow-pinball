@@ -9,6 +9,7 @@
 #include "ModulePhysics.h"
 #include "ModulePlayer.h"
 #include "ModuleFadeToBlack.h"
+#include "ModuleUI.h"
 
 ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
@@ -321,7 +322,7 @@ update_status ModuleSceneIntro::Update()
 
 	if (App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_UP)
 	{
-		ball_kicker->body->ApplyForce({ 0,-1000 }, { 0, 0 }, true); //fire up baby
+		ball_kicker->body->ApplyForce({ 0,-1000 }, { 0, 0 }, true); //fire up ball
 	}
 
 	if(App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)
@@ -407,7 +408,7 @@ update_status ModuleSceneIntro::Update()
 		int x, y;
 		c->data->GetPosition(x, y);
 		//if(c->data->Contains(App->input->GetMouseX(), App->input->GetMouseY()))
-			App->renderer->Blit(circle, x, y, NULL, 1.0f, c->data->GetRotation());
+		App->renderer->Blit(circle, x, y, NULL, 1.0f, c->data->GetRotation());
 		c = c->next;
 	}
 
@@ -450,6 +451,8 @@ update_status ModuleSceneIntro::Update()
 			int x, y;
 			c->data->GetPosition(x, y);
 			App->renderer->Blit(sfx_spritesheet, x, y, d->data);
+
+			App->UI->SumPuntuation(5);
 		}
 		c = c->next; 
 		d = d->next;
@@ -508,7 +511,6 @@ update_status ModuleSceneIntro::PostUpdate() {
 
 	
 	while (c != NULL) {
-
 		c->data->shiny = false;
 		c = c->next;
 	}

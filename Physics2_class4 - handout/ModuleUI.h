@@ -2,8 +2,9 @@
 
 #include "Module.h"
 #include "Globals.h"
-
 #include "ModuleTextures.h"
+
+#define MAX_PUNTUATION_LENGHT 10
 
 struct SDL_Texture;
 
@@ -18,6 +19,7 @@ public:
 	update_status Update();
 	bool CleanUp();
 	
+	void SumPuntuation(int points);
 
 private:
 	
@@ -39,7 +41,7 @@ public:
 	SDL_Rect ballsRemaining;
 	
 
-	char playerPuntuation[10] = "0";
+	char playerPuntuation[MAX_PUNTUATION_LENGHT] = "0";
 };
 
 

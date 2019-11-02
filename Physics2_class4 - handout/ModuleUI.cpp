@@ -54,18 +54,16 @@ bool ModuleUI::CleanUp()
 // Update: draw background
 update_status ModuleUI::Update() {
 	
-	int aux;
+	
 	if (App->input->GetKey(SDL_SCANCODE_F2) == KEY_DOWN)
 	{
-		aux = atoi(playerPuntuation) + 5;  //atoi converts a string to int
-		
-		_itoa_s(aux, playerPuntuation, 10, 10); //itoa converts an int to string
+		SumPuntuation(5);
 	}
 
-	aux;
+	
 
 	App->renderer->Blit(graphics, 5, 10, &puntuationUI);
-	App->fonts->BlitText(240, 60, 0, playerPuntuation);
+	BlitPuntuation();
 
 	return UPDATE_CONTINUE;
 }
@@ -75,7 +73,18 @@ void ModuleUI::GetPuntuations() {
 	
 }
 
+void ModuleUI::SumPuntuation(int points) {
+
+	int aux;
+	aux = atoi(playerPuntuation) + points;  //atoi converts a string to int
+
+	_itoa_s(aux, playerPuntuation, MAX_PUNTUATION_LENGHT, 10); //itoa converts an int to string
+
+}
+
 void ModuleUI::BlitPuntuation() {
-	
+	int x = strlen(playerPuntuation); //Get the current array lenght
+
+	App->fonts->BlitText(240 - x * App->fonts->fonts[0].char_w, 60, 0, playerPuntuation);
 }
 
