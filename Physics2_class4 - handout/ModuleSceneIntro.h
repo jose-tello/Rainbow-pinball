@@ -34,6 +34,7 @@ public:
 
 	PhysBody* leftBumper;
 	PhysBody* rightBumper;
+	PhysBody* leftUpBumper;
 
 	PhysBody* sensorheart1;
 	PhysBody* sensorheart2;
