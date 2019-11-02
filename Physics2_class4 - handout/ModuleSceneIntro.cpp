@@ -193,34 +193,34 @@ bool ModuleSceneIntro::Start()
 
 	//create interactive sensors
 	heart.x = 360; heart.y = 217; heart.w = 28; heart.h = 23;
-	for (int i = 0; i < 3; i++) { interactables_list.add(&heart); }
+	for (int i = 0; i < 3; i++) { score_interactables_list.add(&heart); }
 
-	interactables.add(sensorheart1 = App->physics->CreateRectangleSensor(282, 141, 15, 15)); //heart n1
-	interactables.add(sensorheart2 = App->physics->CreateRectangleSensor(326, 141, 15, 15)); //heart n2
-	interactables.add(sensorheart3 = App->physics->CreateRectangleSensor(371, 141, 15, 15)); //heart n3
+	score_interactables.add(sensorheart1 = App->physics->CreateRectangleSensor(282, 141, 15, 15)); //heart n1
+	score_interactables.add(sensorheart2 = App->physics->CreateRectangleSensor(326, 141, 15, 15)); //heart n2
+	score_interactables.add(sensorheart3 = App->physics->CreateRectangleSensor(371, 141, 15, 15)); //heart n3
 
 	//create all micro_sensors
 	microlight.x = 480; microlight.y = 217; microlight.w = 22; microlight.h = 23;
-	for (int i = 0; i < 14; i++) { interactables_list.add(&microlight); }
+	for (int i = 0; i < 14; i++) { score_interactables_list.add(&microlight); }
 
-	interactables.add(sensorheart1 = App->physics->CreateRectangleSensor(192, 218, 15, 15)); //top_left
-	interactables.add(sensorheart2 = App->physics->CreateRectangleSensor(222, 210, 15, 15));
-	interactables.add(sensorheart3 = App->physics->CreateRectangleSensor(252, 200, 15, 15));
+	score_interactables.add(sensorheart1 = App->physics->CreateRectangleSensor(197, 221, 15, 15)); //top_left
+	score_interactables.add(sensorheart2 = App->physics->CreateRectangleSensor(227, 213, 15, 15));
+	score_interactables.add(sensorheart3 = App->physics->CreateRectangleSensor(256, 203, 15, 15));
 
-	interactables.add(micro_sensor4 = App->physics->CreateRectangleSensor(400, 200, 15, 15)); //top_right
-	interactables.add(micro_sensor5 = App->physics->CreateRectangleSensor(430, 210, 15, 15));
-	interactables.add(micro_sensor6 = App->physics->CreateRectangleSensor(460, 218, 15, 15));
+	score_interactables.add(micro_sensor4 = App->physics->CreateRectangleSensor(404, 202, 15, 15)); //top_right
+	score_interactables.add(micro_sensor5 = App->physics->CreateRectangleSensor(433, 212, 15, 15));
+	score_interactables.add(micro_sensor6 = App->physics->CreateRectangleSensor(463, 220, 15, 15));
 
-	interactables.add(micro_sensor7 = App->physics->CreateRectangleSensor(247, 362, 15, 15)); //middle
-	interactables.add(micro_sensor8 = App->physics->CreateRectangleSensor(277, 370, 15, 15));
-	interactables.add(micro_sensor9 = App->physics->CreateRectangleSensor(305, 379, 15, 15));
+	score_interactables.add(micro_sensor7 = App->physics->CreateRectangleSensor(249, 366, 15, 15)); //middle
+	score_interactables.add(micro_sensor8 = App->physics->CreateRectangleSensor(279, 374, 15, 15));
+	score_interactables.add(micro_sensor9 = App->physics->CreateRectangleSensor(307, 383, 15, 15));
 
-	interactables.add(micro_sensor10 = App->physics->CreateRectangleSensor(162, 435, 15, 15)); //left
-	interactables.add(micro_sensor11= App->physics->CreateRectangleSensor(162, 465, 15, 15));
-	interactables.add(micro_sensor12= App->physics->CreateRectangleSensor(162, 497, 15, 15));
+	score_interactables.add(micro_sensor10 = App->physics->CreateRectangleSensor(165, 439, 15, 15)); //left
+	score_interactables.add(micro_sensor11= App->physics->CreateRectangleSensor(165, 469, 15, 15));
+	score_interactables.add(micro_sensor12= App->physics->CreateRectangleSensor(165, 501, 15, 15));
 
-	interactables.add(micro_sensor13 = App->physics->CreateRectangleSensor(152, 712, 15, 15)); //isolated in bottom lane
-	interactables.add(micro_sensor14 = App->physics->CreateRectangleSensor(503, 712, 15, 15));
+	score_interactables.add(micro_sensor13 = App->physics->CreateRectangleSensor(155, 716, 15, 15)); //isolated in bottom lane
+	score_interactables.add(micro_sensor14 = App->physics->CreateRectangleSensor(506, 716, 15, 15));
 
 	int lpoints[14] = {
 	22, 0,
@@ -440,9 +440,22 @@ update_status ModuleSceneIntro::Update()
 		c = c->next; 
 		d = d->next;
 	}
+	//different because the do not stop to blit after first collision. First 3 are the hearts, others, the microlights.
+	c = score_interactables.getFirst();
+	d = score_interactables_list.getFirst();
+	while (c != NULL && d != NULL)
+	{
+		if (c->data->shiny) {
+			int x, y;
+			c->data->GetPosition(x, y);
+			App->renderer->Blit(sfx_spritesheet, x, y, d->data);
+		}
+		c = c->next;
+		d = d->next;
+	}
 
 
-	//different so we can add velocity calculus next
+	//different so we can add velocity calculus next.
 	c = interactable_bumpers.getFirst();
 	d = interactable_bumpers_list.getFirst();
 	while (c != NULL && d != NULL)
@@ -457,6 +470,7 @@ update_status ModuleSceneIntro::Update()
 		d = d->next;
 	}
 
+	
 	// ray -----------------
 	if(ray_on == true)
 	{
@@ -494,6 +508,8 @@ update_status ModuleSceneIntro::PostUpdate() {
 		c = c->next;
 	}
 	return UPDATE_CONTINUE;
+
+	//we do not reset score_interactable: those are meant to stay shiny!
 }
 
 void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
