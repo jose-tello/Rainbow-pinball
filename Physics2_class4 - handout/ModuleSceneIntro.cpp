@@ -13,7 +13,7 @@
 
 ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
-	circle = box = rick = tabletop= ball= launcher= NULL;
+	circle = box = rick = tabletop= ball=  NULL;
 	ray_on = false;
 	sensed = false;
 }
@@ -31,7 +31,7 @@ bool ModuleSceneIntro::Start()
 
 	ball = App->textures->Load("pinball/the_ball.png"); 
 	circle = App->textures->Load("pinball/the_ball.png");
-	launcher = App->textures->Load("pinball/launcher.png");
+	
 	box = App->textures->Load("pinball/platform.png");
 	rick = App->textures->Load("pinball/rick_head.png");
 	tabletop = App->textures->Load("pinball/tabletop_no_bumpers.png");
@@ -220,15 +220,7 @@ int tabletop_no_bumpers[82] = {
 	death_trigger = App->physics->CreateRectangleSensor(328, 930, 110, 5);
 	
 
-	//ball_kicker
 	
-	
-	ball_kicker = App->physics->CreateRectangle(42, 885, 29, 30, DINAMIC); //Never change this
-	ball_kicker_pivot = App->physics->CreateRectangle(42, 930, 29, 10, STATIC);
-	
-	b2PrismaticJointDef kicker_def;
-	b2PrismaticJoint* kicker_joint = nullptr;
-	App->physics->CreatePiston(ball_kicker, ball_kicker_pivot, kicker_def, kicker_joint);
 
 
 	//first ball
@@ -254,17 +246,7 @@ update_status ModuleSceneIntro::PreUpdate() {
 		App->renderer->Blit(tabletop, 0, 0);
 	}
 
-	//blit the kicker + keep it up......
-	ball_kicker->body->ApplyForce({ 0,-10 }, { 0, 0 }, true);
 	
-	int x, y;
-	ball_kicker->GetPosition(x, y);
-	x -= ball_kicker->width;
-	
-	if (ball_kicker != NULL)
-	{
-		App->renderer->Blit(launcher, x, y,NULL,1.0f);
-	}
 
 	return UPDATE_CONTINUE;
 }
@@ -275,15 +257,7 @@ update_status ModuleSceneIntro::Update()
 {
 	
 
-	if (App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT)
-	{
-		ball_kicker->body->ApplyForce({ 0,15 }, { 0, 0 }, true); //charge
-	}
-
-	if (App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_UP)
-	{
-		ball_kicker->body->ApplyForce({ 0,-1000 }, { 0, 0 }, true); //fire up ball
-	}
+	
 
 	if(App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)
 	{
@@ -570,24 +544,12 @@ update_status ModuleSceneIntro::PostUpdate() {
 	return UPDATE_CONTINUE;
 
 	//we do not reset score_interactable: those are meant to stay shiny!
-
-
-
-	
 }
 
 void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 {
-	int x, y;
-
 	
 	if (bodyA != nullptr) { bodyA->interacted = true; }
 	if (bodyB != nullptr) { bodyB->interacted = true; }
 
-
-	if (bodyA == death_trigger || bodyB == death_trigger) {
-		
-			
-				
-	}
 }

@@ -3,7 +3,7 @@
 #include "p2List.h"
 #include "p2Point.h"
 #include "Globals.h"
-#include "ModuleTextures.h"
+#include "SDL\include\SDL.h"
 
 class PhysBody;
 
@@ -14,27 +14,33 @@ public:
 	virtual ~ModulePlayer();
 
 	bool Start();
+	update_status PreUpdate();
 	update_status Update();
 	update_status PostUpdate();
 	bool CleanUp();
 
 private:
 	void LoseGame();
+	void DrawFlipers();
 
 public:
 	int lifes;
 	uint game_over;
 
 private:
-	PhysBody* leftBumper;
-	PhysBody* rightBumper;
-	PhysBody* leftUpBumper;
+	PhysBody* leftFliper;
+	PhysBody* rightFliper;
+	PhysBody* leftUpFliper;
 
-	SDL_Rect player_bumper_left;
-	SDL_Rect player_bumper_right;
+	SDL_Rect player_fliper_left;
+	SDL_Rect player_fliper_right;
 
-	p2List<PhysBody*> player_bumpers;
-	p2List<SDL_Rect*> player_bumpers_list;
+	p2List<PhysBody*> player_flipers;
+	p2List<SDL_Rect*> player_flipers_rects;
+
+	PhysBody* ball_kicker;
+	PhysBody* ball_kicker_pivot;
 
 	SDL_Texture* sfx_spritesheet = nullptr;
+	SDL_Texture* launcher = nullptr;
 };

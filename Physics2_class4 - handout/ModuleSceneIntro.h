@@ -81,7 +81,6 @@ public:
 	SDL_Texture* rick;
 	SDL_Texture* tabletop;
 	SDL_Texture* ball;
-	SDL_Texture* launcher;
 	SDL_Texture* sfx_spritesheet;
 
 	SDL_Rect ruby;
@@ -99,8 +98,7 @@ public:
 	PhysBody* bumper1;
 	PhysBody* circleBumper1;
 
-	PhysBody* ball_kicker;
-	PhysBody* ball_kicker_pivot;
+
 	
 
 
