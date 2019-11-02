@@ -14,6 +14,7 @@ class ModuleSceneIntro;
 class ModulePhysics;
 class ModuleFonts;
 class ModuleUI;
+class ModuleFadeToBlack;
 
 class Application
 {
@@ -28,6 +29,7 @@ public:
 	ModulePhysics* physics;
 	ModuleFonts* fonts;
 	ModuleUI* UI;
+	ModuleFadeToBlack* fade;
 
 private:
 
