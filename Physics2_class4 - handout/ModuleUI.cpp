@@ -22,16 +22,21 @@ bool ModuleUI::Start()
 	LOG("Loading UI assets");
 	bool ret = true;
 
+	typography1 = App->fonts->Load("pinball/Font_name.png", "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789~·!@#$%^&*()-+=[]{}|:;ç'<>,./? ", 1);
 	numbers = App->fonts->Load("pinball/puntuationNumbers.png", "0123456789", 1);
 	graphics = App->textures->Load("pinball/ui_pinball.png");
 
-	
 
+	
 	puntuationUI.x = 0;
 	puntuationUI.y = 0;
 	puntuationUI.w = 270;
 	puntuationUI.h = 100;
 
+	ballsRemaining.x = 29;
+	ballsRemaining.y = 115;
+	ballsRemaining.w = 17;
+	ballsRemaining.h = 16;
 
 	int currentPuntuation = 0;
 
@@ -64,13 +69,23 @@ update_status ModuleUI::Update() {
 
 	App->renderer->Blit(graphics, 5, 10, &puntuationUI);
 	BlitPuntuation();
+	BlitLives();
 
 	return UPDATE_CONTINUE;
 }
 
 
-void ModuleUI::GetPuntuations() {
+void ModuleUI::UpdatePuntuation() {
 	
+	strncpy_s(previousPuntuation, playerPuntuation, MAX_PUNTUATION_LENGHT);
+
+	if (atoi(playerPuntuation) > atoi(maxPuntuation))
+	{
+		strncpy_s(maxPuntuation, playerPuntuation, MAX_PUNTUATION_LENGHT);
+	}
+	
+	memset(playerPuntuation, NULL, MAX_PUNTUATION_LENGHT);
+	playerPuntuation[0] = '0';
 }
 
 void ModuleUI::SumPuntuation(int points) {
@@ -85,6 +100,20 @@ void ModuleUI::SumPuntuation(int points) {
 void ModuleUI::BlitPuntuation() {
 	int x = strlen(playerPuntuation); //Get the current array lenght
 
-	App->fonts->BlitText(240 - x * App->fonts->fonts[0].char_w, 60, 0, playerPuntuation);
+	App->fonts->BlitText(240 - x * App->fonts->fonts[0].char_w, 60, numbers, playerPuntuation);
+
+	App->fonts->BlitText(30, 110, typography1, "MAX POINTS:");
+	App->fonts->BlitText(160, 110, typography1, maxPuntuation);
+
+	App->fonts->BlitText(30, 130, typography1, "PREV. POINTS:");
+	App->fonts->BlitText(183, 130, typography1, previousPuntuation);
+
 }
 
+void ModuleUI::BlitLives() {
+	for (int i = 0; i < App->player->lifes-1; i++)
+	{
+		App->renderer->Blit(graphics, 239 - 24 * i, 33, &ballsRemaining);
+	}
+	
+}

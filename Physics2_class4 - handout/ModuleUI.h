@@ -20,28 +20,28 @@ public:
 	bool CleanUp();
 	
 	void SumPuntuation(int points);
+	void UpdatePuntuation();
 
 private:
 	
-	void GetPuntuations();
 	void BlitPuntuation();
+	void BlitLives();
 	
 	
 
 public:
 	int numbers;
 	int typography1;
-	int stopedTimer;
-
-	bool doubleKO;
-	bool timeOver;
 
 	SDL_Texture* graphics = nullptr;
+
 	SDL_Rect puntuationUI;
 	SDL_Rect ballsRemaining;
 	
 
 	char playerPuntuation[MAX_PUNTUATION_LENGHT] = "0";
+	char previousPuntuation[MAX_PUNTUATION_LENGHT] = "0";
+	char maxPuntuation[MAX_PUNTUATION_LENGHT] = "0";
 };
 
 

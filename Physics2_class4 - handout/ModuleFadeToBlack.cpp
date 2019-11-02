@@ -9,7 +9,7 @@
 
 ModuleFadeToBlack::ModuleFadeToBlack(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
-	LOG("Contructor of Fade to Black");
+	LOG("FadeToBlack constructor activated");
 }
 
 
@@ -31,7 +31,7 @@ update_status ModuleFadeToBlack::PostUpdate() {
 		return UPDATE_CONTINUE;
 
 	Uint32 now = SDL_GetTicks() - start_time;
-	float normalized = min(1.0f, (float)now / (float)total_time); //¿MIN != min?
+	float normalized = MIN(1.0f, (float)now / (float)total_time);
 
 	switch (current_step)
 	{
@@ -42,13 +42,13 @@ update_status ModuleFadeToBlack::PostUpdate() {
 			if (to_disable != nullptr) {
 				to_disable->Disable();
 			}
-			//App->frames = 0;
+
 
 			if (to_enable != nullptr)
 			{
 				to_enable->Enable();
 			}
-			
+
 			total_time += total_time;
 			start_time = SDL_GetTicks();
 			current_step = fade_step::fade_from_black;
@@ -61,14 +61,15 @@ update_status ModuleFadeToBlack::PostUpdate() {
 
 		if (now >= total_time) {
 			current_step = fade_step::none;
+
 		}
 	} break;
 	}
-	
+
 	// Finally render the black square with alpha on the screen
-	int screen_width = +(SCREEN_WIDTH);	//conversion needed since win uses these values as uint and SDL_Rect only works with int
-	int screen_height = +(SCREEN_HEIGHT);
-	screen = { 0, 0, screen_width, screen_height}; 
+	int screen_width = SCREEN_WIDTH * SCREEN_SIZE;	//conversion needed since win uses these values as uint and SDL_Rect only works with int
+	int screen_height = SCREEN_HEIGHT * SCREEN_SIZE;
+	screen = { 0, 0, screen_width, screen_height };
 	SDL_SetRenderDrawColor(App->renderer->renderer, 0, 0, 0, (Uint8)(normalized * 255.0f));
 	SDL_RenderFillRect(App->renderer->renderer, &screen);
 
@@ -103,10 +104,12 @@ void ModuleFadeToBlack::FadeToBlack(float time) {
 		to_disable = nullptr;
 		to_enable = nullptr;
 	}
+
+
 }
 
 bool ModuleFadeToBlack::CleanUp() {
-	
+
 	to_disable = nullptr;
 	to_enable = nullptr;
 

@@ -44,69 +44,50 @@ bool ModuleSceneIntro::Start()
 
 
 	//create map boundries
-	int tabletop_no_bumpers[120] = {
-		269, 935,
-		270, 901,
-		126, 822,
-		122, 874,
-		89, 871,
-		84, 638,
-		87, 605,
-		101, 575,
-		125, 557,
-		141, 551,
-		140, 411,
-		149, 398,
-		89, 334,
-		101, 286,
-		122, 243,
-		147, 206,
-		253, 174,
-		264, 167,
-		265, 120,
-		254, 107,
-		204, 131,
-		153, 177,
-		126, 209,
-		102, 248,
-		86, 287,
-		71, 351,
-		63, 414,
-		53, 464,
-		55, 554,
-		59, 930,
-		21, 930,
-		19, 553,
-		21, 466,
-		25, 418,
-		41, 316,
-		75, 224,
-		107, 176,
-		168, 114,
-		264, 64,
-		327, 53,
-		394, 77,
-		385, 103,
-		390, 171,
-		483, 203,
-		461, 311,
-		393, 400,
-		413, 422,
-		407, 447,
-		449, 460,
-		497, 477,
-		544, 520,
-		532, 550,
-		550, 567,
-		566, 601,
-		567, 676,
-		567, 874,
-		532, 874,
-		528, 824,
-		386, 900,
-		383, 935
-	};
-	App->physics->CreateChain(0, 0, tabletop_no_bumpers, 120, false); //map walls
+int tabletop_no_bumpers[82] = {
+	69, 933,
+	67, 495,
+	74, 347,
+	102, 267,
+	159, 174,
+	215, 128,
+	255, 107,
+	264, 171,
+	150, 208,
+	103, 284,
+	77, 341,
+	80, 363,
+	141, 415,
+	142, 543,
+	97, 577,
+	87, 653,
+	89, 875,
+	123, 874,
+	123, 822,
+	270, 902,
+	271, 934,
+	385, 934,
+	384, 901,
+	530, 823,
+	532, 874,
+	566, 874,
+	565, 598,
+	534, 556,
+	548, 517,
+	419, 437,
+	398, 402,
+	461, 316,
+	484, 249,
+	486, 206,
+	395, 172,
+	382, 18,
+	202, 78,
+	125, 139,
+	51, 251,
+	16, 384,
+	14, 931
+};
+	App->physics->CreateChain(0, 0, tabletop_no_bumpers, 82, false); //map walls
 
 	//create interactive static bodies
 	interactables.add(sapphire_b=App->physics->CreateCircle(299, 230, 28, STATIC)); //sapphire
@@ -188,7 +169,7 @@ bool ModuleSceneIntro::Start()
 	142 + 2 * (SCREEN_WIDTH /2 -142 + 15), 757,
 	224 + 2 * (SCREEN_WIDTH /2 -224 + 15), 809,
 	211 + 2 * (SCREEN_WIDTH /2 -211 + 15), 818,
-	217 + 2 * (SCREEN_WIDTH /2 -217 + 15), 832,
+	217 + 2 * (SCREEN_WIDTH /2 -217 + 20), 832,
 	135 + 2 * (SCREEN_WIDTH /2 -135 + 15), 784,
 	120 + 2 * (SCREEN_WIDTH /2 -120 + 15), 747
 	};
@@ -263,16 +244,22 @@ bool ModuleSceneIntro::Start()
 	};
 
 
-	leftBumper = App->physics->CreateBumper(SCREEN_WIDTH * 0.5f -82, 828, -10, 10, lpoints, 14, -0.30f, -0.02f);
+	leftBumper = App->physics->CreateBumper(SCREEN_WIDTH * 0.5f - 85, 824, -10, 10, lpoints, 14, -0.30f, -0.02f);
 	player_bumpers.add(leftBumper);
 	player_bumper_left.x = 120; player_bumper_left.y = 61; player_bumper_left.w = 98; player_bumper_left.h = 59;
 	player_bumpers_list.add(&player_bumper_left);
 	
 	
-	rightBumper = App->physics->CreateBumper(SCREEN_WIDTH * 0.5f + 117, 828, -90, 10, rpoints, 14, 0.02f, 0.40f);
+	rightBumper = App->physics->CreateBumper(SCREEN_WIDTH * 0.5f + 120, 824, -90, 10, rpoints, 14, 0.02f, 0.40f);
 	player_bumpers.add(rightBumper);
 	player_bumper_right.x = 120; player_bumper_right.y = 0; player_bumper_right.w = 98; player_bumper_right.h = 59;
 	player_bumpers_list.add(&player_bumper_right);
+
+
+	leftUpBumper = App->physics->CreateBumper(SCREEN_WIDTH * 0.5f - 220, 345, -10, 10, lpoints, 14, -0.30f, 0.15f);
+	player_bumpers.add(leftUpBumper);
+	player_bumper_left.x = 120; player_bumper_left.y = 61; player_bumper_left.w = 98; player_bumper_left.h = 59;
+	player_bumpers_list.add(&player_bumper_left);
 
 	//ball_kicker
 	
@@ -330,6 +317,7 @@ update_status ModuleSceneIntro::Update()
 	if (App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_DOWN)
 	{
 		leftBumper->body->ApplyAngularImpulse(-50, true);
+		leftUpBumper->body->ApplyAngularImpulse(-50, true);
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_DOWN)
@@ -642,6 +630,9 @@ update_status ModuleSceneIntro::PostUpdate() {
 	return UPDATE_CONTINUE;
 
 	//we do not reset score_interactable: those are meant to stay shiny!
+
+
+
 	
 }
 
