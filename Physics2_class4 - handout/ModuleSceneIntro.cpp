@@ -526,6 +526,7 @@ update_status ModuleSceneIntro::Update()
 			y = circles.getFirst()->data->body->GetLinearVelocity().y * 2;
 
 			circles.getFirst()->data->body->SetLinearVelocity(b2Vec2(x,y));
+		
 			
 		}
 		c = c->next;
@@ -536,7 +537,7 @@ update_status ModuleSceneIntro::Update()
 	
 
 	
-	// ray -----------------
+	// -----------------
 	if(ray_on == true)
 	{
 		fVector destination(mouse.x-ray.x, mouse.y-ray.y);
