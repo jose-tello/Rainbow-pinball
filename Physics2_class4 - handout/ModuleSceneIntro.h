@@ -54,17 +54,26 @@ public:
 	PhysBody* micro_sensor12;
 	PhysBody* micro_sensor13;
 	PhysBody* micro_sensor14;
+
 	PhysBody* land_mass1;
 	PhysBody* land_mass2;
+
 	PhysBody* trd_static_bumper;
 	PhysBody* fst_static_bumper;
 	PhysBody* snd_static_bumper;
+
 	PhysBody* ruby_b;
 	PhysBody* sapphire_b;
 	PhysBody* emmerald_b;
 	PhysBody* amethyst_b;
 	PhysBody* magic_Well_b;
+
 	PhysBody* death_trigger;
+	PhysBody* lifesaver1;
+	PhysBody* lifesaver2;
+	PhysBody* platform1;
+	PhysBody* platform2;
+
 
 	
 

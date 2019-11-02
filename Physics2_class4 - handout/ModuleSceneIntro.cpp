@@ -32,7 +32,7 @@ bool ModuleSceneIntro::Start()
 	ball = App->textures->Load("pinball/the_ball.png"); 
 	circle = App->textures->Load("pinball/the_ball.png");
 	launcher = App->textures->Load("pinball/launcher.png");
-	box = App->textures->Load("pinball/crate.png");
+	box = App->textures->Load("pinball/platform.png");
 	rick = App->textures->Load("pinball/rick_head.png");
 	tabletop = App->textures->Load("pinball/tabletop_no_bumpers.png");
 	sfx_spritesheet = App->textures->Load("pinball/sfx_spritesheet.png");
@@ -227,6 +227,14 @@ bool ModuleSceneIntro::Start()
 	score_interactables.add(micro_sensor13 = App->physics->CreateRectangleSensor(155, 716, 15, 15)); //isolated in bottom lane
 	score_interactables.add(micro_sensor14 = App->physics->CreateRectangleSensor(506, 716, 15, 15));
 
+	//Create small life saver sensors at ball pits
+	lifesaver1 = App->physics->CreateRectangleSensor(105, 870, 30, 5);
+	lifesaver2 = App->physics->CreateRectangleSensor(550, 870, 30, 5);
+
+	//sensors of the activable platforms
+	platform1 = App->physics->CreateRectangleSensor(107, 828, 36, 5);
+	platform2 = App->physics->CreateRectangleSensor(550, 828, 36, 5);
+	
 	//create "ball death trigger"
 	death_trigger = App->physics->CreateRectangleSensor(328, 930, 110, 5);
 
@@ -359,7 +367,9 @@ update_status ModuleSceneIntro::Update()
 
 	if(App->input->GetKey(SDL_SCANCODE_2) == KEY_DOWN)
 	{
-		boxes.add(App->physics->CreateRectangle(App->input->GetMouseX(), App->input->GetMouseY(), 100, 50, DINAMIC));
+		int x, y;
+		platform1->GetPosition(x, y);
+		boxes.add(App->physics->CreateRectangle(App->input->GetMouseX(), App->input->GetMouseY(), platform1->width, platform1->height, STATIC));
 	}
 
 	if(App->input->GetKey(SDL_SCANCODE_3) == KEY_DOWN)
@@ -409,6 +419,12 @@ update_status ModuleSceneIntro::Update()
 		App->player->lifes--; 
 	}
 
+	if (App->input->GetKey(SDL_SCANCODE_5) == KEY_DOWN)
+	{
+		//reset velocity
+		circles.getFirst()->data->body->SetLinearVelocity(b2Vec2(0, 0));
+		circles.getFirst()->data->body->SetAngularVelocity(0);
+	}
 	// Prepare for raycast ------------------------------------------------------
 	
 	iPoint mouse;
@@ -418,10 +434,7 @@ update_status ModuleSceneIntro::Update()
 
 	fVector normal(0.0f, 0.0f);
 
-	// All draw functions ------------------------------------------------------
-
-	p2List_item<PhysBody*>* c = circles.getFirst();
-	//circles = our ball
+	
 	
 	if (death_trigger->interacted == true) {
 		
@@ -437,9 +450,43 @@ update_status ModuleSceneIntro::Update()
 		circles.getFirst()->data->body->SetAngularVelocity(0);
 	}
 	
+
+	//check if ball fell into pit
+	if (lifesaver1->interacted == true) {
+		
+		circles.getFirst()->data->body->SetLinearVelocity(b2Vec2(0, -25));
+	}
+	if (lifesaver2->interacted == true) {
+		
+		
+		circles.getFirst()->data->body->SetLinearVelocity(b2Vec2(0, -25));
+	}
 	
+	if (platform1->interacted == true && lifesaver1->interacted == true) {
+
+		platform1->interacted = lifesaver1->interacted = false;
+		int x, y;
+		platform1->GetPosition(x, y);
+		PhysBody* thisbox = (App->physics->CreateAngledRectangle(x + platform1->width, y , platform1->width, platform1->height, KINEMATIC,60));
+		
+		//thisbox->body->SetTransform(b2Vec2(x, y), 45);
+		boxes.add(thisbox);
+	}
+	if (platform2->interacted == true && lifesaver2->interacted == true) {
+
+		platform2->interacted = lifesaver2->interacted = false;
+		int x, y;
+		platform2->GetPosition(x, y);
+		boxes.add(App->physics->CreateAngledRectangle(x + platform2->width, y , platform2->width, platform2->height, KINEMATIC, -60));
 	
+	}
 	
+	// All draw functions ------------------------------------------------------
+
+
+	//circles = our ball
+	
+	p2List_item<PhysBody*>* c = circles.getFirst();
 	while(c != NULL)
 	{
 		int x, y;
@@ -456,13 +503,15 @@ update_status ModuleSceneIntro::Update()
 	{
 		int x, y;
 		c->data->GetPosition(x, y);
-		App->renderer->Blit(box, x, y, NULL, 1.0f, c->data->GetRotation());
+		App->renderer->Blit(box, x, y,NULL,1.0f,c->data->GetRotation());
+		/*
 		if(ray_on)
 		{
 			int hit = c->data->RayCast(ray.x, ray.y, mouse.x, mouse.y, normal.x, normal.y);
 			if(hit >= 0)
 				ray_hit = hit;
 		}
+		*/
 		c = c->next;
 	}
 
@@ -586,12 +635,13 @@ update_status ModuleSceneIntro::PostUpdate() {
 		c = c->next;
 	}
 
+	//make sure that the block of lifesaver only happens if you're coming from it, not to it
+	platform2->interacted = false;
+	platform1->interacted = false;
+
 	return UPDATE_CONTINUE;
 
 	//we do not reset score_interactable: those are meant to stay shiny!
-
-
-
 	
 }
 
