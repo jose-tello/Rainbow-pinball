@@ -1,6 +1,7 @@
 #include "Globals.h"
 #include "Application.h"
 #include "ModulePlayer.h"
+#include "ModuleUI.h"
 #include "ModuleFadeToBlack.h"
 
 
@@ -33,9 +34,12 @@ bool ModulePlayer::CleanUp()
 update_status ModulePlayer::Update()
 {
 
-	if (App->player->lifes < 1) {
+	if (App->player->lifes == 0) {
 		App->audio->PlayFx(App->player->game_over);
 		App->fade->FadeToBlack(2);
+
+		App->UI->UpdatePuntuation();
+
 		App->player->lifes = 3;
 	}
 

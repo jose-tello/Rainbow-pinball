@@ -35,12 +35,13 @@ Application::Application()
 	// Main Modules
 	AddModule(window);
 	AddModule(physics);
+	AddModule(fade);
 	AddModule(renderer);
 	AddModule(textures);
 	AddModule(fonts);
 	AddModule(input);
 	AddModule(audio);
-	AddModule(fade);
+	
 	
 	// Scenes
 	
@@ -49,6 +50,8 @@ Application::Application()
 	
 	// Player
 	AddModule(player);
+
+	
 }
 
 Application::~Application()
