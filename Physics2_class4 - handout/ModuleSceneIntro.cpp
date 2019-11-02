@@ -520,6 +520,11 @@ update_status ModuleSceneIntro::Update()
 			int x, y;
 			c->data->GetPosition(x, y);
 			App->renderer->Blit(sfx_spritesheet, x, y, d->data);
+			x = circles.getFirst()->data->body->GetLinearVelocity().x * 2;
+			y = circles.getFirst()->data->body->GetLinearVelocity().y * 2;
+
+			circles.getFirst()->data->body->SetLinearVelocity(b2Vec2(x,y));
+			
 		}
 		c = c->next;
 		d = d->next;
