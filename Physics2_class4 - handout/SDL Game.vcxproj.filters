@@ -62,16 +62,8 @@
     <ClInclude Include="ModuleFonts.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-<<<<<<< HEAD
-    <ClInclude Include="p2SString.h">
-      <Filter>Header Files\Containers</Filter>
-    </ClInclude>
-    <ClInclude Include="p2Defs.h">
-      <Filter>Header Files\Containers</Filter>
-=======
     <ClInclude Include="ModuleFadeToBlack.h">
       <Filter>Header Files</Filter>
->>>>>>> 4c9ff7185fed7fdf5b2b5def9bafcbbc6cd84341
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
