@@ -7,6 +7,8 @@
 #include "ModuleAudio.h"
 #include "ModuleWindow.h"
 #include "ModulePhysics.h"
+#include "ModulePlayer.h"
+#include "ModuleFadeToBlack.h"
 
 ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
@@ -36,6 +38,7 @@ bool ModuleSceneIntro::Start()
 
 	bumpersound = App->audio->LoadFx("pinball/bonus.wav");
 	score = App->audio->LoadFx("pinball/score.wav");
+	
 
 
 	//create map boundries
@@ -375,6 +378,12 @@ update_status ModuleSceneIntro::Update()
 		ricks.add(App->physics->CreateChain(App->input->GetMouseX(), App->input->GetMouseY(), rick_head, 64));
 	}
 
+	if (App->input->GetKey(SDL_SCANCODE_4) == KEY_DOWN)
+	{
+	//lose a life
+		App->player->lifes--; 
+	}
+
 	// Prepare for raycast ------------------------------------------------------
 	
 	iPoint mouse;
@@ -484,8 +493,6 @@ update_status ModuleSceneIntro::Update()
 			App->renderer->DrawLine(ray.x + destination.x, ray.y + destination.y, ray.x + destination.x + normal.x * 25.0f, ray.y + destination.y + normal.y * 25.0f, 100, 255, 100);
 	}
 
-
-
 	return UPDATE_CONTINUE;
 }
 
@@ -510,6 +517,9 @@ update_status ModuleSceneIntro::PostUpdate() {
 	return UPDATE_CONTINUE;
 
 	//we do not reset score_interactable: those are meant to stay shiny!
+
+
+	
 }
 
 void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
@@ -521,20 +531,4 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 	if (bodyB != nullptr) { bodyB->shiny = true; }
 
 
-
-
-
-
-	/*
-	if(bodyA)
-	{
-		bodyA->GetPosition(x, y);
-		App->renderer->DrawCircle(x, y, 50, 100, 100, 100);
-	}
-
-	if(bodyB)
-	{
-		bodyB->GetPosition(x, y);
-		App->renderer->DrawCircle(x, y, 50, 100, 100, 100);
-	}*/
 }

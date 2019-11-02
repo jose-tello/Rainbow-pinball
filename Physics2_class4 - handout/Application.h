@@ -31,6 +31,8 @@ public:
 	ModuleUI* UI;
 	ModuleFadeToBlack* fade;
 
+	
+
 private:
 
 	p2List<Module*> list_modules;

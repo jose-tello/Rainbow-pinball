@@ -2,6 +2,8 @@
 #include "Module.h"
 #include "Globals.h"
 #include "p2Point.h"
+#include "ModuleAudio.h"
+
 
 class ModulePlayer : public Module
 {
@@ -11,8 +13,10 @@ public:
 
 	bool Start();
 	update_status Update();
+	update_status PostUpdate();
 	bool CleanUp();
 
 public:
-
+	int lifes;
+	uint game_over;
 };
