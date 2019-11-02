@@ -65,8 +65,6 @@ update_status ModuleUI::Update() {
 		SumPuntuation(5);
 	}
 
-	
-
 	App->renderer->Blit(graphics, 5, 10, &puntuationUI);
 	BlitPuntuation();
 	BlitLives();
@@ -77,11 +75,11 @@ update_status ModuleUI::Update() {
 
 void ModuleUI::UpdatePuntuation() {
 	
-	strncpy_s(previousPuntuation, playerPuntuation, MAX_PUNTUATION_LENGHT);
+	strcpy_s(previousPuntuation, playerPuntuation);
 
 	if (atoi(playerPuntuation) > atoi(maxPuntuation))
 	{
-		strncpy_s(maxPuntuation, playerPuntuation, MAX_PUNTUATION_LENGHT);
+		strcpy_s(maxPuntuation, playerPuntuation);
 	}
 	
 	memset(playerPuntuation, NULL, MAX_PUNTUATION_LENGHT);
@@ -115,5 +113,4 @@ void ModuleUI::BlitLives() {
 	{
 		App->renderer->Blit(graphics, 239 - 24 * i, 33, &ballsRemaining);
 	}
-	
 }

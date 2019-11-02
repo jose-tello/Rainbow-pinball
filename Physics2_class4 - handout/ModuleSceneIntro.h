@@ -26,17 +26,13 @@ public:
 	p2List<PhysBody*> interactables; 
 	p2List<PhysBody*> interactable_bumpers;
 	p2List<PhysBody*> score_interactables;
-	p2List<PhysBody*> player_bumpers;
+
 
 
 	p2List<SDL_Rect*> interactables_list;
 	p2List<SDL_Rect*> score_interactables_list;
 	p2List<SDL_Rect*> interactable_bumpers_list;
-	p2List<SDL_Rect*> player_bumpers_list;
-
-	PhysBody* leftBumper;
-	PhysBody* rightBumper;
-	PhysBody* leftUpBumper;
+	
 
 	PhysBody* sensorheart1;
 	PhysBody* sensorheart2;
@@ -89,8 +85,7 @@ public:
 	SDL_Rect weird_bumper;
 	SDL_Rect heart;
 	SDL_Rect microlight;
-	SDL_Rect player_bumper_left;
-	SDL_Rect player_bumper_right;
+
 
 	PhysBody* bumper1;
 	PhysBody* circleBumper1;
