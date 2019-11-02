@@ -154,6 +154,7 @@ PhysBody* ModulePhysics::CreateRectangle(int x, int y, int width, int height, BO
 
 	return pbody;
 }
+
 PhysBody* ModulePhysics::CreateAngledRectangle(int x, int y, int width, int height, BODYTYPE type,float angle)
 {
 	b2BodyDef body;

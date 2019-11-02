@@ -22,6 +22,7 @@ bool ModulePlayer::Start()
 	LOG("Loading player");
 
 	sfx_spritesheet = App->textures->Load("pinball/sfx_spritesheet.png");
+	launcher = App->textures->Load("pinball/launcher.png");
 
 	game_over = App->audio->LoadFx("pinball/game_over.wav");
 	lifes = 3;
@@ -47,22 +48,32 @@ bool ModulePlayer::Start()
 	};
 
 
-	leftBumper = App->physics->CreateBumper(SCREEN_WIDTH * 0.5f - 85, 824, -10, 10, lpoints, 14, -0.30f, -0.02f);
-	player_bumpers.add(leftBumper);
-	player_bumper_left.x = 120; player_bumper_left.y = 61; player_bumper_left.w = 98; player_bumper_left.h = 59;
-	player_bumpers_list.add(&player_bumper_left);
+	leftFliper = App->physics->CreateBumper(SCREEN_WIDTH * 0.5f - 85, 824, -10, 10, lpoints, 14, -0.30f, -0.02f);
+	player_flipers.add(leftFliper);
+	player_fliper_left.x = 120; player_fliper_left.y = 61; player_fliper_left.w = 98; player_fliper_left.h = 59;
+	player_flipers_rects.add(&player_fliper_left);
 
 
-	rightBumper = App->physics->CreateBumper(SCREEN_WIDTH * 0.5f + 120, 824, -90, 10, rpoints, 14, 0.02f, 0.40f);
-	player_bumpers.add(rightBumper);
-	player_bumper_right.x = 120; player_bumper_right.y = 0; player_bumper_right.w = 98; player_bumper_right.h = 59;
-	player_bumpers_list.add(&player_bumper_right);
+	rightFliper = App->physics->CreateBumper(SCREEN_WIDTH * 0.5f + 120, 824, -90, 10, rpoints, 14, 0.02f, 0.40f);
+	player_flipers.add(rightFliper);
+	player_fliper_right.x = 120; player_fliper_right.y = 0; player_fliper_right.w = 98; player_fliper_right.h = 59;
+	player_flipers_rects.add(&player_fliper_right);
 
 
-	leftUpBumper = App->physics->CreateBumper(SCREEN_WIDTH * 0.5f - 220, 345, -10, 10, lpoints, 14, -0.30f, 0.15f);
-	player_bumpers.add(leftUpBumper);
-	player_bumper_left.x = 120; player_bumper_left.y = 61; player_bumper_left.w = 98; player_bumper_left.h = 59;
-	player_bumpers_list.add(&player_bumper_left);
+	leftUpFliper = App->physics->CreateBumper(SCREEN_WIDTH * 0.5f - 220, 345, -10, 10, lpoints, 14, -0.30f, 0.15f);
+	player_flipers.add(leftUpFliper);
+	player_fliper_left.x = 120; player_fliper_left.y = 61; player_fliper_left.w = 98; player_fliper_left.h = 59;
+	player_flipers_rects.add(&player_fliper_left);
+
+
+	//ball_kicker
+
+	ball_kicker = App->physics->CreateRectangle(42, 885, 29, 30, DINAMIC); //Never change this
+	ball_kicker_pivot = App->physics->CreateRectangle(42, 930, 29, 10, STATIC);
+
+	b2PrismaticJointDef kicker_def;
+	b2PrismaticJoint* kicker_joint = nullptr;
+	App->physics->CreatePiston(ball_kicker, ball_kicker_pivot, kicker_def, kicker_joint);
 
 	return true;
 }
@@ -70,10 +81,36 @@ bool ModulePlayer::Start()
 // Unload assets
 bool ModulePlayer::CleanUp()
 {
+
+	App->textures->Unload(sfx_spritesheet);
+	App->textures->Unload(launcher);
+	
+	sfx_spritesheet = nullptr;
+	launcher = nullptr;
+
 	LOG("Unloading player");
 
 	return true;
 }
+
+update_status ModulePlayer::PreUpdate()
+{
+	//blit the kicker + keep it up......
+	ball_kicker->body->ApplyForce({ 0,-10 }, { 0, 0 }, true);
+
+	int x, y;
+	ball_kicker->GetPosition(x, y);
+	x -= ball_kicker->width;
+
+	if (ball_kicker != NULL)
+	{
+		App->renderer->Blit(launcher, x, y, NULL, 1.0f);
+	}
+
+	return UPDATE_CONTINUE;
+
+}
+
 
 // Update: draw background
 update_status ModulePlayer::Update()
@@ -81,28 +118,26 @@ update_status ModulePlayer::Update()
 
 	if (App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_DOWN)
 	{
-		leftBumper->body->ApplyAngularImpulse(-50, true);
-		leftUpBumper->body->ApplyAngularImpulse(-50, true);
+		leftFliper->body->ApplyAngularImpulse(-50, true);
+		leftUpFliper->body->ApplyAngularImpulse(-50, true);
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_DOWN)
 	{
-		rightBumper->body->ApplyAngularImpulse(50, true);
+		rightFliper->body->ApplyAngularImpulse(50, true);
 	}
 
-
-	p2List_item<PhysBody*>*c = player_bumpers.getFirst();
-	p2List_item<SDL_Rect*>* d = player_bumpers_list.getFirst();
-	while (c != NULL && d != NULL)
+	if (App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT || App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_DOWN)
 	{
-		int x, y;
-		c->data->GetPosition(x, y);
-		App->renderer->Blit(sfx_spritesheet, x, y, d->data, 1.0f, c->data->GetRotation(), 0, 0);
-
-		c = c->next;
-		d = d->next;
+		ball_kicker->body->ApplyForce({ 0,15 }, { 0, 0 }, true); //charge
 	}
 
+	if (App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_UP)
+	{
+		ball_kicker->body->ApplyForce({ 0,-1000 }, { 0, 0 }, true); //fire up ball
+	}
+
+	DrawFlipers();
 
 
 	if (App->player->lifes == 0) {
@@ -113,6 +148,7 @@ update_status ModulePlayer::Update()
 	return UPDATE_CONTINUE;
 }
 
+
 update_status ModulePlayer::PostUpdate() {
 
 	return UPDATE_CONTINUE;
@@ -120,6 +156,10 @@ update_status ModulePlayer::PostUpdate() {
 
 
 void ModulePlayer::LoseGame() {
+
+	App->scene_intro->circles.getFirst()->data->body->SetTransform(b2Vec2(PIXEL_TO_METERS(30), PIXEL_TO_METERS(810)), 0);
+	App->scene_intro->circles.getFirst()->data->body->SetLinearVelocity(b2Vec2(0, 0));
+	App->scene_intro->circles.getFirst()->data->body->SetAngularVelocity(0);
 
 	App->audio->PlayFx(App->player->game_over);
 	App->fade->FadeToBlack(2);
@@ -130,6 +170,20 @@ void ModulePlayer::LoseGame() {
 }
 
 
+void ModulePlayer::DrawFlipers() {
+
+	p2List_item<PhysBody*>*c = player_flipers.getFirst();
+	p2List_item<SDL_Rect*>* d = player_flipers_rects.getFirst();
+	while (c != NULL && d != NULL)
+	{
+		int x, y;
+		c->data->GetPosition(x, y);
+		App->renderer->Blit(sfx_spritesheet, x, y, d->data, 1.0f, c->data->GetRotation(), 0, 0);
+
+		c = c->next;
+		d = d->next;
+	}
+}
 
 
 

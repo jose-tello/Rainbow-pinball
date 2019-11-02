@@ -13,7 +13,7 @@
 
 ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
-	circle = box = rick = tabletop= ball= launcher= NULL;
+	circle = tabletop= ball=  NULL;
 	ray_on = false;
 	sensed = false;
 }
@@ -31,9 +31,7 @@ bool ModuleSceneIntro::Start()
 
 	ball = App->textures->Load("pinball/the_ball.png"); 
 	circle = App->textures->Load("pinball/the_ball.png");
-	launcher = App->textures->Load("pinball/launcher.png");
-	box = App->textures->Load("pinball/platform.png");
-	rick = App->textures->Load("pinball/rick_head.png");
+	
 	tabletop = App->textures->Load("pinball/tabletop_no_bumpers.png");
 	sfx_spritesheet = App->textures->Load("pinball/sfx_spritesheet.png");
 
@@ -43,51 +41,49 @@ bool ModuleSceneIntro::Start()
 	lost_ball = App->audio->LoadFx("pinball/lost_ball.wav");
 	
 
-
-
 	//create map boundries
-int tabletop_no_bumpers[82] = {
-	69, 933,
-	67, 495,
-	74, 347,
-	102, 267,
-	159, 174,
-	215, 128,
-	255, 107,
-	264, 171,
-	150, 208,
-	103, 284,
-	77, 341,
-	80, 363,
-	141, 415,
-	142, 543,
-	97, 577,
-	87, 653,
-	89, 875,
-	123, 874,
-	123, 822,
-	270, 902,
-	271, 934,
-	385, 934,
-	384, 901,
-	530, 823,
-	532, 874,
-	566, 874,
-	565, 598,
-	534, 556,
-	548, 517,
-	419, 437,
-	398, 402,
-	461, 316,
-	484, 249,
-	486, 206,
-	395, 172,
-	382, 18,
-	202, 78,
-	125, 139,
-	51, 251,
-	16, 384,
-	14, 931
+	int tabletop_no_bumpers[82] = {
+		69, 933,
+		67, 495,
+		74, 347,
+		102, 267,
+		159, 174,
+		215, 128,
+		255, 107,
+		264, 171,
+		150, 208,
+		103, 284,
+		77, 341,
+		80, 363,
+		141, 415,
+		142, 543,
+		97, 577,
+		87, 653,
+		89, 875,
+		123, 874,
+		123, 822,
+		270, 902,
+		271, 934,
+		385, 934,
+		384, 901,
+		530, 823,
+		532, 874,
+		566, 874,
+		565, 598,
+		534, 556,
+		548, 517,
+		419, 437,
+		398, 402,
+		461, 316,
+		484, 249,
+		486, 206,
+		395, 172,
+		382, 18,
+		202, 78,
+		125, 139,
+		51, 251,
+		16, 384,
+		14, 931
 };
 	App->physics->CreateChain(0, 0, tabletop_no_bumpers, 82, false); //map walls
 
@@ -222,15 +218,7 @@ int tabletop_no_bumpers[82] = {
 	death_trigger = App->physics->CreateRectangleSensor(328, 930, 110, 5);
 	
 
-	//ball_kicker
 	
-	
-	ball_kicker = App->physics->CreateRectangle(42, 885, 29, 30, DINAMIC); //Never change this
-	ball_kicker_pivot = App->physics->CreateRectangle(42, 930, 29, 10, STATIC);
-	
-	b2PrismaticJointDef kicker_def;
-	b2PrismaticJoint* kicker_joint = nullptr;
-	App->physics->CreatePiston(ball_kicker, ball_kicker_pivot, kicker_def, kicker_joint);
 
 
 	//first ball
@@ -256,36 +244,14 @@ update_status ModuleSceneIntro::PreUpdate() {
 		App->renderer->Blit(tabletop, 0, 0);
 	}
 
-	//blit the kicker + keep it up......
-	ball_kicker->body->ApplyForce({ 0,-10 }, { 0, 0 }, true);
 	
-	int x, y;
-	ball_kicker->GetPosition(x, y);
-	x -= ball_kicker->width;
-	
-	if (ball_kicker != NULL)
-	{
-		App->renderer->Blit(launcher, x, y,NULL,1.0f);
-	}
 
 	return UPDATE_CONTINUE;
 }
 
 
 // Update: draw figures
-update_status ModuleSceneIntro::Update()
-{
-	
-
-	if (App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT)
-	{
-		ball_kicker->body->ApplyForce({ 0,15 }, { 0, 0 }, true); //charge
-	}
-
-	if (App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_UP)
-	{
-		ball_kicker->body->ApplyForce({ 0,-1000 }, { 0, 0 }, true); //fire up ball
-	}
+update_status ModuleSceneIntro::Update() {
 
 	if(App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)
 	{
@@ -305,53 +271,6 @@ update_status ModuleSceneIntro::Update()
 		circles.getFirst()->data->body->SetAngularVelocity(0);
 	}
 
-	if(App->input->GetKey(SDL_SCANCODE_2) == KEY_DOWN)
-	{
-		int x, y;
-		platform1->GetPosition(x, y);
-		boxes.add(App->physics->CreateRectangle(App->input->GetMouseX(), App->input->GetMouseY(), platform1->width, platform1->height, STATIC));
-	}
-
-	if(App->input->GetKey(SDL_SCANCODE_3) == KEY_DOWN)
-	{
-		// Pivot 0, 0
-		int rick_head[64] = {
-			14, 36,
-			42, 40,
-			40, 0,
-			75, 30,
-			88, 4,
-			94, 39,
-			111, 36,
-			104, 58,
-			107, 62,
-			117, 67,
-			109, 73,
-			110, 85,
-			106, 91,
-			109, 99,
-			103, 104,
-			100, 115,
-			106, 121,
-			103, 125,
-			98, 126,
-			95, 137,
-			83, 147,
-			67, 147,
-			53, 140,
-			46, 132,
-			34, 136,
-			38, 126,
-			23, 123,
-			30, 114,
-			10, 102,
-			29, 90,
-			0, 75,
-			170, 40
-		};
-
-		ricks.add(App->physics->CreateChain(App->input->GetMouseX(), App->input->GetMouseY(), rick_head, 64));
-	}
 
 	if (App->input->GetKey(SDL_SCANCODE_4) == KEY_DOWN)
 	{
@@ -365,6 +284,8 @@ update_status ModuleSceneIntro::Update()
 		circles.getFirst()->data->body->SetLinearVelocity(b2Vec2(0, 0));
 		circles.getFirst()->data->body->SetAngularVelocity(0);
 	}
+
+
 	if (App->input->GetKey(SDL_SCANCODE_8) == KEY_REPEAT) //lower volume
 	{
 		int x = Mix_VolumeMusic(-1); //-1 returns the actual value
@@ -409,8 +330,8 @@ update_status ModuleSceneIntro::Update()
 		
 		circles.getFirst()->data->body->SetLinearVelocity(b2Vec2(0, -25));
 	}
+
 	if (lifesaver2->interacted == true) {
-		
 		
 		circles.getFirst()->data->body->SetLinearVelocity(b2Vec2(0, -25));
 	}
@@ -425,6 +346,7 @@ update_status ModuleSceneIntro::Update()
 		//thisbox->body->SetTransform(b2Vec2(x, y), 45);
 		boxes.add(thisbox);
 	}
+
 	if (platform2->interacted == true && lifesaver2->interacted == true) {
 
 		platform2->interacted = lifesaver2->interacted = false;
@@ -433,111 +355,12 @@ update_status ModuleSceneIntro::Update()
 		boxes.add(App->physics->CreateAngledRectangle(x + platform2->width, y , platform2->width, platform2->height, KINEMATIC, -60));
 	
 	}
-	
-	// All draw functions ------------------------------------------------------
 
 
-	//circles = our ball
-	
-	p2List_item<PhysBody*>* c = circles.getFirst();
-	while(c != NULL)
-	{
-		int x, y;
-		c->data->GetPosition(x, y);
-		//if(c->data->Contains(App->input->GetMouseX(), App->input->GetMouseY()))
-			App->renderer->Blit(circle, x, y, NULL, 1.0f, c->data->GetRotation());
-
-		c = c->next;
-	}
-
-	c = boxes.getFirst();
-
-	while(c != NULL)
-	{
-		int x, y;
-		c->data->GetPosition(x, y);
-		App->renderer->Blit(box, x, y,NULL,1.0f,c->data->GetRotation());
-		/*
-		if(ray_on)
-		{
-			int hit = c->data->RayCast(ray.x, ray.y, mouse.x, mouse.y, normal.x, normal.y);
-			if(hit >= 0)
-				ray_hit = hit;
-		}
-		*/
-		c = c->next;
-	}
-
-	c = ricks.getFirst();
-
-	while(c != NULL)
-	{
-		int x, y;
-		c->data->GetPosition(x, y);
-		App->renderer->Blit(rick, x, y, NULL, 1.0f, c->data->GetRotation());
-		c = c->next;
-	}
-
-
-	//Drawing shiny elements on collision
-	c = interactables.getFirst();
-	p2List_item<SDL_Rect*>* d;
-	d = interactables_list.getFirst();
-
-	while (c != NULL && d != NULL)
-	{
-		if (c->data->interacted) {
-			App->audio->PlayFx(score);
-			int x, y;
-			c->data->GetPosition(x, y);
-			App->renderer->Blit(sfx_spritesheet, x, y, d->data);
-
-			App->UI->SumPuntuation(5);
-		}
-		c = c->next; 
-		d = d->next;
-	}
-	//different because the do not stop to blit after first collision. First 3 are the hearts, others, the microlights.
-	c = score_interactables.getFirst();
-	d = score_interactables_list.getFirst();
-	while (c != NULL && d != NULL)
-	{
-		if (c->data->interacted) {
-			int x, y;
-			c->data->GetPosition(x, y);
-			App->renderer->Blit(sfx_spritesheet, x, y, d->data);
-		}
-		c = c->next;
-		d = d->next;
-	}
-
-
-	//different so we can add velocity calculus next.
-	c = interactable_bumpers.getFirst();
-	d = interactable_bumpers_list.getFirst();
-	while (c != NULL && d != NULL)
-	{
-		if (c->data->interacted) {
-			App->audio->PlayFx(bumpersound);
-			int x, y;
-			c->data->GetPosition(x, y);
-			App->renderer->Blit(sfx_spritesheet, x, y, d->data);
-			x = circles.getFirst()->data->body->GetLinearVelocity().x * 2;
-			y = circles.getFirst()->data->body->GetLinearVelocity().y * 2;
-
-			circles.getFirst()->data->body->SetLinearVelocity(b2Vec2(x,y));
-		
-			
-		}
-		c = c->next;
-		d = d->next;
-	}
-	
-	//player bumpers. those move.
+	BlitMap();
 	
 
-	
-	// -----------------
+	// ray -----------------
 	if(ray_on == true)
 	{
 		fVector destination(mouse.x-ray.x, mouse.y-ray.y);
@@ -586,24 +409,109 @@ update_status ModuleSceneIntro::PostUpdate() {
 	return UPDATE_CONTINUE;
 
 	//we do not reset score_interactable: those are meant to stay shiny!
-
-
-
-	
 }
 
 void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 {
-	int x, y;
-
 	
 	if (bodyA != nullptr) { bodyA->interacted = true; }
 	if (bodyB != nullptr) { bodyB->interacted = true; }
 
+}
 
-	if (bodyA == death_trigger || bodyB == death_trigger) {
+
+void ModuleSceneIntro::BlitMap() {
+
+	//circles = our ball
+
+	p2List_item<PhysBody*>* c = circles.getFirst();
+	while (c != NULL)
+	{
+		int x, y;
+		c->data->GetPosition(x, y);
+		//if(c->data->Contains(App->input->GetMouseX(), App->input->GetMouseY()))
+		App->renderer->Blit(circle, x, y, NULL, 1.0f, c->data->GetRotation());
+
+		c = c->next;
+	}
+
+	//Drawing shiny elements on collision
+	c = interactables.getFirst();
+	p2List_item<SDL_Rect*>* d;
+	d = interactables_list.getFirst();
+
+	while (c != NULL && d != NULL)
+	{
+		if (c->data->interacted) {
+			App->audio->PlayFx(score);
+			int x, y;
+			c->data->GetPosition(x, y);
+			App->renderer->Blit(sfx_spritesheet, x, y, d->data);
+
+			App->UI->SumPuntuation(5);
+		}
+		c = c->next;
+		d = d->next;
+	}
+
+	//different because the do not stop to blit after first collision. First 3 are the hearts, others, the microlights.
+
+	int count = 0;
+
+	c = score_interactables.getFirst();
+	d = score_interactables_list.getFirst();
+	while (c != NULL && d != NULL)
+	{
+		if (c->data->interacted) {
+			int x, y;
+			
+			c->data->GetPosition(x, y);
+			App->renderer->Blit(sfx_spritesheet, x, y, d->data);
+
+			count++;
+		}
+		c = c->next;
+		d = d->next;
+	}
+
+	if (count == 14)
+	{
+		App->player->lifes++;
+		count = 0;
+
+		c = score_interactables.getFirst();
+		d = score_interactables_list.getFirst();
+		while (c != NULL && d != NULL)
+		{
+			if (c->data->interacted) {
+				c->data->interacted = false;
+			}
+			c = c->next;
+			d = d->next;
+		}
+	}
+
+
+	//different so we can add velocity calculus next.
+	c = interactable_bumpers.getFirst();
+	d = interactable_bumpers_list.getFirst();
+
+	while (c != NULL && d != NULL)
+	{
+		if (c->data->interacted) {
+			App->audio->PlayFx(bumpersound);
+			int x, y;
+			c->data->GetPosition(x, y);
+			App->renderer->Blit(sfx_spritesheet, x, y, d->data);
+			x = circles.getFirst()->data->body->GetLinearVelocity().x * 2;
+			y = circles.getFirst()->data->body->GetLinearVelocity().y * 2;
+
+			circles.getFirst()->data->body->SetLinearVelocity(b2Vec2(x,y));
 		
 			
-				
+		}
+		c = c->next;
+		d = d->next;
 	}
+
 }
