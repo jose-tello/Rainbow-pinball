@@ -2,6 +2,7 @@
 
 #include "Module.h"
 #include "Globals.h"
+
 #include "ModuleTextures.h"
 
 struct SDL_Texture;
@@ -35,9 +36,10 @@ public:
 
 	SDL_Texture* graphics = nullptr;
 	SDL_Rect puntuationUI;
+	SDL_Rect ballsRemaining;
 	
 
-	char* playerPuntuation;
+	char playerPuntuation[10] = "0";
 };
 
 

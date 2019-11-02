@@ -7,8 +7,6 @@
 #include "ModuleFonts.h"
 #include "ModuleInput.h"
 
-#include "SDL/include/SDL.h"
-#include "SDL/include/SDL_gamecontroller.h"
 
 ModuleUI::ModuleUI(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
@@ -56,8 +54,18 @@ bool ModuleUI::CleanUp()
 // Update: draw background
 update_status ModuleUI::Update() {
 	
-	App->renderer->Blit(graphics, 50, 50, &puntuationUI);
-	App->fonts->BlitText(50, 50, 0, "5");
+	int aux;
+	if (App->input->GetKey(SDL_SCANCODE_F2) == KEY_DOWN)
+	{
+		aux = atoi(playerPuntuation) + 5;  //atoi converts a string to int
+		
+		_itoa_s(aux, playerPuntuation, 10, 10); //itoa converts an int to string
+	}
+
+	aux;
+
+	App->renderer->Blit(graphics, 5, 10, &puntuationUI);
+	App->fonts->BlitText(240, 60, 0, playerPuntuation);
 
 	return UPDATE_CONTINUE;
 }

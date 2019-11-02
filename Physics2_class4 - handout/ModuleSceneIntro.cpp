@@ -5,7 +5,10 @@
 #include "ModuleInput.h"
 #include "ModuleTextures.h"
 #include "ModuleAudio.h"
+#include "ModuleWindow.h"
 #include "ModulePhysics.h"
+#include "ModulePlayer.h"
+#include "ModuleFadeToBlack.h"
 
 ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
@@ -35,6 +38,7 @@ bool ModuleSceneIntro::Start()
 
 	bumpersound = App->audio->LoadFx("pinball/bonus.wav");
 	score = App->audio->LoadFx("pinball/score.wav");
+	
 
 
 	//create map boundries
@@ -168,56 +172,58 @@ bool ModuleSceneIntro::Start()
 	142, 757,
 	224, 809,
 	211, 818,
-	215, 835,
+	217, 840,
 	135, 784,
 	120, 747
 	};
 	land_mass1 = App->physics->CreateChain(0, 0, landmass1, 18, false);
-
+	
+	
 	int landmass2[18] = {
-	521, 646,
-	532, 648,
-	533, 750,
-	519, 785,
-	441, 833,
-	441, 814,
-	427, 811,
-	507, 760,
-	522, 734
+	121 + 2*(SCREEN_WIDTH/2 -121 +15), 648, // +15 => adjusting to the fact that this pinball is not perfectly symmetrycal
+	129 + 2*(SCREEN_WIDTH /2 -129 + 15), 648,
+	132 + 2*(SCREEN_WIDTH /2 -132 + 15), 730,
+	142 + 2 * (SCREEN_WIDTH /2 -142 + 15), 757,
+	224 + 2 * (SCREEN_WIDTH /2 -224 + 15), 809,
+	211 + 2 * (SCREEN_WIDTH /2 -211 + 15), 818,
+	217 + 2 * (SCREEN_WIDTH /2 -217 + 15), 840,
+	135 + 2 * (SCREEN_WIDTH /2 -135 + 15), 784,
+	120 + 2 * (SCREEN_WIDTH /2 -120 + 15), 747
 	};
+	
 	land_mass2 = App->physics->CreateChain(0, 0, landmass2, 18, false);
 
 
 	//create interactive sensors
 	heart.x = 360; heart.y = 217; heart.w = 28; heart.h = 23;
-	for (int i = 0; i < 3; i++) { interactables_list.add(&heart); }
+	for (int i = 0; i < 3; i++) { score_interactables_list.add(&heart); }
 
-	interactables.add(sensorheart1 = App->physics->CreateRectangleSensor(282, 141, 15, 15)); //heart n1
-	interactables.add(sensorheart2 = App->physics->CreateRectangleSensor(326, 141, 15, 15)); //heart n2
-	interactables.add(sensorheart3 = App->physics->CreateRectangleSensor(371, 141, 15, 15)); //heart n3
+	score_interactables.add(sensorheart1 = App->physics->CreateRectangleSensor(282, 141, 15, 15)); //heart n1
+	score_interactables.add(sensorheart2 = App->physics->CreateRectangleSensor(326, 141, 15, 15)); //heart n2
+	score_interactables.add(sensorheart3 = App->physics->CreateRectangleSensor(371, 141, 15, 15)); //heart n3
 
 	//create all micro_sensors
 	microlight.x = 480; microlight.y = 217; microlight.w = 22; microlight.h = 23;
-	for (int i = 0; i < 14; i++) { interactables_list.add(&microlight); }
+	for (int i = 0; i < 14; i++) { score_interactables_list.add(&microlight); }
 
-	interactables.add(sensorheart1 = App->physics->CreateRectangleSensor(192, 218, 15, 15)); //top_left
-	interactables.add(sensorheart2 = App->physics->CreateRectangleSensor(222, 210, 15, 15));
-	interactables.add(sensorheart3 = App->physics->CreateRectangleSensor(252, 200, 15, 15));
+	score_interactables.add(sensorheart1 = App->physics->CreateRectangleSensor(197, 221, 15, 15)); //top_left
+	score_interactables.add(sensorheart2 = App->physics->CreateRectangleSensor(227, 213, 15, 15));
+	score_interactables.add(sensorheart3 = App->physics->CreateRectangleSensor(256, 203, 15, 15));
 
-	interactables.add(micro_sensor4 = App->physics->CreateRectangleSensor(400, 200, 15, 15)); //top_right
-	interactables.add(micro_sensor5 = App->physics->CreateRectangleSensor(430, 210, 15, 15));
-	interactables.add(micro_sensor6 = App->physics->CreateRectangleSensor(460, 218, 15, 15));
+	score_interactables.add(micro_sensor4 = App->physics->CreateRectangleSensor(404, 202, 15, 15)); //top_right
+	score_interactables.add(micro_sensor5 = App->physics->CreateRectangleSensor(433, 212, 15, 15));
+	score_interactables.add(micro_sensor6 = App->physics->CreateRectangleSensor(463, 220, 15, 15));
 
-	interactables.add(micro_sensor7 = App->physics->CreateRectangleSensor(247, 362, 15, 15)); //middle
-	interactables.add(micro_sensor8 = App->physics->CreateRectangleSensor(277, 370, 15, 15));
-	interactables.add(micro_sensor9 = App->physics->CreateRectangleSensor(305, 379, 15, 15));
+	score_interactables.add(micro_sensor7 = App->physics->CreateRectangleSensor(249, 366, 15, 15)); //middle
+	score_interactables.add(micro_sensor8 = App->physics->CreateRectangleSensor(279, 374, 15, 15));
+	score_interactables.add(micro_sensor9 = App->physics->CreateRectangleSensor(307, 383, 15, 15));
 
-	interactables.add(micro_sensor10 = App->physics->CreateRectangleSensor(162, 435, 15, 15)); //left
-	interactables.add(micro_sensor11= App->physics->CreateRectangleSensor(162, 465, 15, 15));
-	interactables.add(micro_sensor12= App->physics->CreateRectangleSensor(162, 497, 15, 15));
+	score_interactables.add(micro_sensor10 = App->physics->CreateRectangleSensor(165, 439, 15, 15)); //left
+	score_interactables.add(micro_sensor11= App->physics->CreateRectangleSensor(165, 469, 15, 15));
+	score_interactables.add(micro_sensor12= App->physics->CreateRectangleSensor(165, 501, 15, 15));
 
-	interactables.add(micro_sensor13 = App->physics->CreateRectangleSensor(152, 712, 15, 15)); //isolated in bottom lane
-	interactables.add(micro_sensor14 = App->physics->CreateRectangleSensor(503, 712, 15, 15));
+	score_interactables.add(micro_sensor13 = App->physics->CreateRectangleSensor(155, 716, 15, 15)); //isolated in bottom lane
+	score_interactables.add(micro_sensor14 = App->physics->CreateRectangleSensor(506, 716, 15, 15));
 
 	int lpoints[14] = {
 	22, 0,
@@ -240,8 +246,8 @@ bool ModuleSceneIntro::Start()
 	};
 
 
-	leftBumper = App->physics->CreateBumper(SCREEN_WIDTH * 0.5f - 103, 825, -10, 10, lpoints, 14, -0.30f, -0.02f);
-	rightBumper = App->physics->CreateBumper(SCREEN_WIDTH * 0.5f + 97, 825, -90, 10, rpoints, 14, 0.02f, 0.40f);
+	leftBumper = App->physics->CreateBumper(SCREEN_WIDTH * 0.5f -82, 828, -10, 10, lpoints, 14, -0.30f, -0.02f);
+	rightBumper = App->physics->CreateBumper(SCREEN_WIDTH * 0.5f + 117, 828, -90, 10, rpoints, 14, 0.02f, 0.40f);
 	
 
 
@@ -254,6 +260,11 @@ bool ModuleSceneIntro::Start()
 	b2PrismaticJointDef kicker_def;
 	b2PrismaticJoint* kicker_joint = nullptr;
 	App->physics->CreatePiston(ball_kicker, ball_kicker_pivot, kicker_def, kicker_joint);
+
+
+	//first ball
+	circles.add(App->physics->CreateCircle(30, 810, 15, DINAMIC));
+	circles.getLast()->data->listener = this;
 	
 	return ret;
 }
@@ -372,6 +383,12 @@ update_status ModuleSceneIntro::Update()
 		ricks.add(App->physics->CreateChain(App->input->GetMouseX(), App->input->GetMouseY(), rick_head, 64));
 	}
 
+	if (App->input->GetKey(SDL_SCANCODE_4) == KEY_DOWN)
+	{
+	//lose a life
+		App->player->lifes--; 
+	}
+
 	// Prepare for raycast ------------------------------------------------------
 	
 	iPoint mouse;
@@ -437,9 +454,22 @@ update_status ModuleSceneIntro::Update()
 		c = c->next; 
 		d = d->next;
 	}
+	//different because the do not stop to blit after first collision. First 3 are the hearts, others, the microlights.
+	c = score_interactables.getFirst();
+	d = score_interactables_list.getFirst();
+	while (c != NULL && d != NULL)
+	{
+		if (c->data->shiny) {
+			int x, y;
+			c->data->GetPosition(x, y);
+			App->renderer->Blit(sfx_spritesheet, x, y, d->data);
+		}
+		c = c->next;
+		d = d->next;
+	}
 
 
-	//different so we can add velocity calculus next
+	//different so we can add velocity calculus next.
 	c = interactable_bumpers.getFirst();
 	d = interactable_bumpers_list.getFirst();
 	while (c != NULL && d != NULL)
@@ -454,6 +484,7 @@ update_status ModuleSceneIntro::Update()
 		d = d->next;
 	}
 
+	
 	// ray -----------------
 	if(ray_on == true)
 	{
@@ -466,8 +497,6 @@ update_status ModuleSceneIntro::Update()
 		if(normal.x != 0.0f)
 			App->renderer->DrawLine(ray.x + destination.x, ray.y + destination.y, ray.x + destination.x + normal.x * 25.0f, ray.y + destination.y + normal.y * 25.0f, 100, 255, 100);
 	}
-
-
 
 	return UPDATE_CONTINUE;
 }
@@ -491,6 +520,11 @@ update_status ModuleSceneIntro::PostUpdate() {
 		c = c->next;
 	}
 	return UPDATE_CONTINUE;
+
+	//we do not reset score_interactable: those are meant to stay shiny!
+
+
+	
 }
 
 void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
@@ -502,20 +536,4 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 	if (bodyB != nullptr) { bodyB->shiny = true; }
 
 
-
-
-
-
-	/*
-	if(bodyA)
-	{
-		bodyA->GetPosition(x, y);
-		App->renderer->DrawCircle(x, y, 50, 100, 100, 100);
-	}
-
-	if(bodyB)
-	{
-		bodyB->GetPosition(x, y);
-		App->renderer->DrawCircle(x, y, 50, 100, 100, 100);
-	}*/
 }
