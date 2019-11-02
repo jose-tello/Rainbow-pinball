@@ -44,6 +44,8 @@ bool ModuleAudio::Init()
 		ret = true;
 	}
 
+	Mix_VolumeMusic(MIX_MAX_VOLUME / 4); //we do not want my little pony OST blasting from the start, do we?
+
 	return ret;
 }
 
