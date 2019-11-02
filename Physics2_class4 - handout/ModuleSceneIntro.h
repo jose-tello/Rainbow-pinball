@@ -25,11 +25,12 @@ public:
 	p2List<PhysBody*> circles;
 	p2List<PhysBody*> boxes;
 	p2List<PhysBody*> interactables; 
+	p2List<PhysBody*> hearts;
 	p2List<PhysBody*> interactable_bumpers;
 	p2List<PhysBody*> score_interactables;
 
 
-
+	p2List<SDL_Rect*> hearts_list;
 	p2List<SDL_Rect*> interactables_list;
 	p2List<SDL_Rect*> score_interactables_list;
 	p2List<SDL_Rect*> interactable_bumpers_list;
