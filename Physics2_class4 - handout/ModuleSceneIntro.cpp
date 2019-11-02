@@ -34,6 +34,7 @@ bool ModuleSceneIntro::Start()
 	
 	tabletop = App->textures->Load("pinball/tabletop_no_bumpers.png");
 	sfx_spritesheet = App->textures->Load("pinball/sfx_spritesheet.png");
+	platform = App->textures->Load("pinball/platform.png");
 
 	background_music = App->audio->PlayMusic("pinball/my_little_pony.wav", 3);
 	bumpersound = App->audio->LoadFx("pinball/bonus.wav");
@@ -177,11 +178,11 @@ bool ModuleSceneIntro::Start()
 
 	//create interactive sensors
 	heart.x = 360; heart.y = 217; heart.w = 28; heart.h = 23;
-	for (int i = 0; i < 3; i++) { score_interactables_list.add(&heart); }
+	for (int i = 0; i < 3; i++) { hearts_list.add(&heart); }
 
-	score_interactables.add(sensorheart1 = App->physics->CreateRectangleSensor(282, 141, 15, 15)); //heart n1
-	score_interactables.add(sensorheart2 = App->physics->CreateRectangleSensor(326, 141, 15, 15)); //heart n2
-	score_interactables.add(sensorheart3 = App->physics->CreateRectangleSensor(371, 141, 15, 15)); //heart n3
+	hearts.add(sensorheart1 = App->physics->CreateRectangleSensor(282, 141, 15, 15)); //heart n1
+	hearts.add(sensorheart2 = App->physics->CreateRectangleSensor(326, 141, 15, 15)); //heart n2
+	hearts.add(sensorheart3 = App->physics->CreateRectangleSensor(371, 141, 15, 15)); //heart n3
 
 	//create all micro_sensors
 	microlight.x = 480; microlight.y = 217; microlight.w = 22; microlight.h = 23;
@@ -444,7 +445,7 @@ update_status ModuleSceneIntro::Update() {
 		PhysBody* thisbox = (App->physics->CreateAngledRectangle(x + platform1->width, y , platform1->width, platform1->height, KINEMATIC,60));
 		
 		//thisbox->body->SetTransform(b2Vec2(x, y), 45);
-		boxes.add(thisbox);
+		platforms.add(thisbox);
 	}
 
 	if (platform2->interacted == true && lifesaver2->interacted == true) {
@@ -452,7 +453,7 @@ update_status ModuleSceneIntro::Update() {
 		platform2->interacted = lifesaver2->interacted = false;
 		int x, y;
 		platform2->GetPosition(x, y);
-		boxes.add(App->physics->CreateAngledRectangle(x + platform2->width, y , platform2->width, platform2->height, KINEMATIC, -60));
+		platforms.add(App->physics->CreateAngledRectangle(x + platform2->width, y , platform2->width, platform2->height, KINEMATIC, -60));
 	
 	}
 
@@ -553,6 +554,18 @@ void ModuleSceneIntro::BlitMap() {
 		c = c->next;
 		d = d->next;
 	}
+	
+	//platforms, if spawn
+	c = platforms.getFirst();
+
+	while (c != NULL )
+	{
+		int x, y;
+		c->data->GetPosition(x, y);
+		App->renderer->Blit(platform, x, y, NULL,1.0f,c->data->GetRotation());
+		c = c->next;
+		
+	}
 
 	//different because the do not stop to blit after first collision. First 3 are the hearts, others, the microlights.
 
@@ -590,6 +603,23 @@ void ModuleSceneIntro::BlitMap() {
 			d = d->next;
 		}
 	}
+	//now, the hearts
+	c = hearts.getFirst();
+	d = hearts_list.getFirst();
+	while (c != NULL && d != NULL)
+	{
+		if (c->data->interacted) {
+			int x, y;
+
+			c->data->GetPosition(x, y);
+			App->renderer->Blit(sfx_spritesheet, x, y, d->data);
+
+			count++;
+		}
+		c = c->next;
+		d = d->next;
+	}
+
 
 
 	//different so we can add velocity calculus next.
@@ -603,11 +633,13 @@ void ModuleSceneIntro::BlitMap() {
 			int x, y;
 			c->data->GetPosition(x, y);
 			App->renderer->Blit(sfx_spritesheet, x, y, d->data);
-			x = circles.getFirst()->data->body->GetLinearVelocity().x * 2;
-			y = circles.getFirst()->data->body->GetLinearVelocity().y * 2;
+			x = circles.getFirst()->data->body->GetLinearVelocity().x;
+			y = circles.getFirst()->data->body->GetLinearVelocity().y;
 
-			circles.getFirst()->data->body->SetLinearVelocity(b2Vec2(x, y));
-
+			//circles.getFirst()->data->body->SetLinearVelocity(b2Vec2(2*x,2*y));
+			circles.getFirst()->data->body->SetLinearVelocity(b2Vec2(2 * y, 2 * x)); //perpendicular
+		
+			
 		}
 		c = c->next;
 		d = d->next;
