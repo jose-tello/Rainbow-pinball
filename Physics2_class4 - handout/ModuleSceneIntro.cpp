@@ -260,6 +260,11 @@ bool ModuleSceneIntro::Start()
 	b2PrismaticJointDef kicker_def;
 	b2PrismaticJoint* kicker_joint = nullptr;
 	App->physics->CreatePiston(ball_kicker, ball_kicker_pivot, kicker_def, kicker_joint);
+
+
+	//first ball
+	circles.add(App->physics->CreateCircle(30, 810, 15, DINAMIC));
+	circles.getLast()->data->listener = this;
 	
 	return ret;
 }
