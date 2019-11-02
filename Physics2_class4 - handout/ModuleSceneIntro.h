@@ -62,6 +62,10 @@ public:
 	PhysBody* emmerald_b;
 	PhysBody* amethyst_b;
 	PhysBody* magic_Well_b;
+	PhysBody* death_trigger;
+
+	
+
 	bool sensed;
 
 	SDL_Texture* circle;
@@ -94,6 +98,7 @@ public:
 
 	uint bumpersound;
 	uint score;
+	uint lost_ball;
 	p2Point<int> ray;
 	bool ray_on;
 };
