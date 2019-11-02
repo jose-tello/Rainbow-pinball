@@ -137,9 +137,7 @@ update_status ModulePlayer::Update()
 		ball_kicker->body->ApplyForce({ 0,-1000 }, { 0, 0 }, true); //fire up ball
 	}
 
-	void DrawFlippers();
-
-
+	DrawFlipers();
 
 
 	if (App->player->lifes == 0) {
@@ -158,6 +156,10 @@ update_status ModulePlayer::PostUpdate() {
 
 
 void ModulePlayer::LoseGame() {
+
+	App->scene_intro->circles.getFirst()->data->body->SetTransform(b2Vec2(PIXEL_TO_METERS(30), PIXEL_TO_METERS(810)), 0);
+	App->scene_intro->circles.getFirst()->data->body->SetLinearVelocity(b2Vec2(0, 0));
+	App->scene_intro->circles.getFirst()->data->body->SetAngularVelocity(0);
 
 	App->audio->PlayFx(App->player->game_over);
 	App->fade->FadeToBlack(2);

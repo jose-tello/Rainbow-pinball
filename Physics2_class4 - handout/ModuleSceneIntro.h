@@ -19,10 +19,11 @@ public:
 	bool CleanUp();
 	void OnCollision(PhysBody* bodyA, PhysBody* bodyB);
 
+	void BlitMap();
+
 public:
 	p2List<PhysBody*> circles;
 	p2List<PhysBody*> boxes;
-	p2List<PhysBody*> ricks;
 	p2List<PhysBody*> interactables; 
 	p2List<PhysBody*> interactable_bumpers;
 	p2List<PhysBody*> score_interactables;
@@ -72,13 +73,9 @@ public:
 	PhysBody* platform2;
 
 
-	
-
 	bool sensed;
 
 	SDL_Texture* circle;
-	SDL_Texture* box;
-	SDL_Texture* rick;
 	SDL_Texture* tabletop;
 	SDL_Texture* ball;
 	SDL_Texture* sfx_spritesheet;
