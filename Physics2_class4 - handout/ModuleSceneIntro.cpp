@@ -5,6 +5,7 @@
 #include "ModuleInput.h"
 #include "ModuleTextures.h"
 #include "ModuleAudio.h"
+#include "ModuleWindow.h"
 #include "ModulePhysics.h"
 
 ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Module(app, start_enabled)
@@ -168,23 +169,25 @@ bool ModuleSceneIntro::Start()
 	142, 757,
 	224, 809,
 	211, 818,
-	215, 835,
+	217, 840,
 	135, 784,
 	120, 747
 	};
 	land_mass1 = App->physics->CreateChain(0, 0, landmass1, 18, false);
-
+	
+	
 	int landmass2[18] = {
-	521, 646,
-	532, 648,
-	533, 750,
-	519, 785,
-	441, 833,
-	441, 814,
-	427, 811,
-	507, 760,
-	522, 734
+	121 + 2*(SCREEN_WIDTH/2 -121 +15), 648, // +15 => adjusting to the fact that this pinball is not perfectly symmetrycal
+	129 + 2*(SCREEN_WIDTH /2 -129 + 15), 648,
+	132 + 2*(SCREEN_WIDTH /2 -132 + 15), 730,
+	142 + 2 * (SCREEN_WIDTH /2 -142 + 15), 757,
+	224 + 2 * (SCREEN_WIDTH /2 -224 + 15), 809,
+	211 + 2 * (SCREEN_WIDTH /2 -211 + 15), 818,
+	217 + 2 * (SCREEN_WIDTH /2 -217 + 15), 840,
+	135 + 2 * (SCREEN_WIDTH /2 -135 + 15), 784,
+	120 + 2 * (SCREEN_WIDTH /2 -120 + 15), 747
 	};
+	
 	land_mass2 = App->physics->CreateChain(0, 0, landmass2, 18, false);
 
 
@@ -240,8 +243,8 @@ bool ModuleSceneIntro::Start()
 	};
 
 
-	leftBumper = App->physics->CreateBumper(SCREEN_WIDTH * 0.5f - 103, 825, -10, 10, lpoints, 14, -0.30f, -0.02f);
-	rightBumper = App->physics->CreateBumper(SCREEN_WIDTH * 0.5f + 97, 825, -90, 10, rpoints, 14, 0.02f, 0.40f);
+	leftBumper = App->physics->CreateBumper(SCREEN_WIDTH * 0.5f -82, 828, -10, 10, lpoints, 14, -0.30f, -0.02f);
+	rightBumper = App->physics->CreateBumper(SCREEN_WIDTH * 0.5f + 117, 828, -90, 10, rpoints, 14, 0.02f, 0.40f);
 	
 
 
