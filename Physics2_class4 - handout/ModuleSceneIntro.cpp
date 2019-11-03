@@ -36,12 +36,12 @@ bool ModuleSceneIntro::Start()
 	sfx_spritesheet = App->textures->Load("assets/map/sfx_spritesheet.png");
 	platform = App->textures->Load("assets/map/platform.png");
 
-	background_music = App->audio->PlayMusic("pinball/my_little_pony.ogg", 3);
-	bumpersound = App->audio->LoadFx("pinball/bonus.wav");
-	score = App->audio->LoadFx("pinball/score.wav");
-	lost_ball = App->audio->LoadFx("pinball/lost_ball.wav");
-	plat_sound = App->audio->LoadFx("pinball/plat_sound.wav");
-	UP = App->audio->LoadFx("pinball/UP.wav");
+	background_music = App->audio->PlayMusic("assets/music_and_sounds/my_little_pony.ogg", 3);
+	bumpersound = App->audio->LoadFx("assets/music_and_sounds/bonus.wav");
+	score = App->audio->LoadFx("assets/music_and_sounds/score.wav");
+	lost_ball = App->audio->LoadFx("assets/music_and_sounds/lost_ball.wav");
+	plat_sound = App->audio->LoadFx("assets/music_and_sounds/plat_sound.wav");
+	UP = App->audio->LoadFx("assets/music_and_sounds/UP.wav");
 	
 
 	//create map boundries
