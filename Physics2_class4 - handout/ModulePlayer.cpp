@@ -6,6 +6,7 @@
 #include "ModuleAudio.h"
 #include "ModuleUI.h"
 #include "ModuleRender.h"
+#include "ModuleSceneIntro.h"
 #include "ModuleFadeToBlack.h"
 
 
@@ -176,7 +177,10 @@ void ModulePlayer::LoseGame() {
 	App->scene_intro->circles.getFirst()->data->body->SetAngularVelocity(0);
 
 	App->audio->PlayFx(App->player->game_over);
+	App->scene_intro->mov_platform1->body->SetTransform(b2Vec2(0,-30), 51);
+	App->scene_intro->mov_platform2->body->SetTransform(b2Vec2(0,-30), -51);
 	App->fade->FadeToBlack(2);
+	
 
 	App->UI->UpdatePuntuation();
 

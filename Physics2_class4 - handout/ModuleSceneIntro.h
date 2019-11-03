@@ -78,6 +78,8 @@ public:
 	PhysBody* lifesaver2;
 	PhysBody* platform1;
 	PhysBody* platform2;
+	PhysBody* mov_platform1;
+	PhysBody* mov_platform2;
 
 
 	bool sensed;

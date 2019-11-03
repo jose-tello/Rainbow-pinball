@@ -231,6 +231,13 @@ bool ModuleSceneIntro::Start()
 
 	bumpersensor3 = (App->physics->CreateAngledRectangle(280, 352, 5, 90, STATIC, -1.3));
 	bumpers_surface.add(bumpersensor3);
+
+
+	//movable platforms
+	mov_platform1 = (App->physics->CreateAngledRectangle(0, -30, platform1->width, platform1->height, KINEMATIC, 51));
+	platforms.add(mov_platform1);
+	mov_platform2 = (App->physics->CreateAngledRectangle(0, -30, platform2->width, platform2->height, KINEMATIC, -51));
+	platforms.add(mov_platform2);
 	
 	//create "ball death trigger"
 	death_trigger = App->physics->CreateRectangleSensor(328, 930, 110, 5);
@@ -253,6 +260,7 @@ bool ModuleSceneIntro::CleanUp() {
 	hearts.clear();
 	interactable_bumpers.clear();
 	score_interactables.clear();
+	
 
 	hearts_list.clear();
 	interactables_list.clear();
@@ -471,21 +479,22 @@ update_status ModuleSceneIntro::Update() {
 	if (platform1->interacted == true && lifesaver1->interacted == true) {
 
 		platform1->interacted = lifesaver1->interacted = false;
+		App->audio->PlayFx(plat_sound);
 		int x, y;
 		platform1->GetPosition(x, y);
-		App->audio->PlayFx(plat_sound);
-		platforms.add((App->physics->CreateAngledRectangle(x + platform1->width, y , platform1->width, platform1->height, KINEMATIC,60)));
+		//mov_platform1->body->SetTransform(b2Vec2((x + platform1->width), (y)), mov_platform1->GetRotation());
+		mov_platform1->body->SetTransform(platform1->body->GetPosition(), mov_platform1->GetRotation());
+		LOG("yeeeet");
 		
 	}
 
 	if (platform2->interacted == true && lifesaver2->interacted == true) {
-
 		platform2->interacted = lifesaver2->interacted = false;
+		App->audio->PlayFx(plat_sound);
 		int x, y;
 		platform2->GetPosition(x, y);
-		App->audio->PlayFx(plat_sound);
-		platforms.add(App->physics->CreateAngledRectangle(x + platform2->width, y , platform2->width, platform2->height, KINEMATIC, -60));
-	
+		mov_platform2->body->SetTransform(platform2->body->GetPosition(), mov_platform2->GetRotation());
+
 	}
 
 
