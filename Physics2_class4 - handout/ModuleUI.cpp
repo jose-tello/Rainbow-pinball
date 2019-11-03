@@ -74,7 +74,6 @@ update_status ModuleUI::Update() {
 		//lose a life
 		App->player->lifes++;
 	}
-
 	App->renderer->Blit(graphics, 5, 10, &puntuationUI);
 	BlitPuntuation();
 	BlitLives();
