@@ -48,13 +48,13 @@ bool ModulePlayer::Start()
 	};
 
 
-	leftFliper = App->physics->CreateBumper(SCREEN_WIDTH * 0.5f - 85, 824, -10, 10, lpoints, 14, -0.30f, -0.02f);
+	leftFliper = App->physics->CreateBumper(SCREEN_WIDTH * 0.5f - 93, 820, -10, 10, lpoints, 14, -0.30f, -0.02f);
 	player_flipers.add(leftFliper);
 	player_fliper_left.x = 120; player_fliper_left.y = 61; player_fliper_left.w = 98; player_fliper_left.h = 59;
 	player_flipers_rects.add(&player_fliper_left);
 
 
-	rightFliper = App->physics->CreateBumper(SCREEN_WIDTH * 0.5f + 120, 824, -90, 10, rpoints, 14, 0.02f, 0.40f);
+	rightFliper = App->physics->CreateBumper(SCREEN_WIDTH * 0.5f + 127, 820, -90, 10, rpoints, 14, 0.02f, 0.40f);
 	player_flipers.add(rightFliper);
 	player_fliper_right.x = 120; player_fliper_right.y = 0; player_fliper_right.w = 98; player_fliper_right.h = 59;
 	player_flipers_rects.add(&player_fliper_right);

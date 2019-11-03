@@ -148,29 +148,29 @@ bool ModuleSceneIntro::Start()
 	//Static land masses
 
 	int landmass1[18] = {
-	121, 648,
-	129, 648,
-	132, 730,
-	142, 757,
-	224, 809,
-	211, 818,
-	217, 832,
-	130, 780,
-	120, 747
+	220, 806,
+	208, 813,
+	205, 829,
+	144, 791,
+	125, 762,
+	121, 647,
+	131, 646,
+	133, 737,
+	148, 758
 	};
 	land_mass1 = App->physics->CreateChain(0, 0, landmass1, 18, false);
 	
 	
 	int landmass2[18] = {
-	121 + 2*(SCREEN_WIDTH/2 -121 +15), 648, // +15 => adjusting to the fact that this pinball is not perfectly symmetrycal
-	129 + 2*(SCREEN_WIDTH /2 -129 + 15), 648,
-	132 + 2*(SCREEN_WIDTH /2 -132 + 15), 730,
-	142 + 2 * (SCREEN_WIDTH /2 -142 + 15), 757,
-	224 + 2 * (SCREEN_WIDTH /2 -224 + 15), 809,
-	211 + 2 * (SCREEN_WIDTH /2 -211 + 15), 818,
-	217 + 2 * (SCREEN_WIDTH /2 -217 + 20), 832,
-	135 + 2 * (SCREEN_WIDTH /2 -135 + 15), 784,
-	120 + 2 * (SCREEN_WIDTH /2 -120 + 15), 747
+	220 + 2 * (SCREEN_WIDTH/2 - 220 +15), 806, // +15 => adjusting to the fact that this pinball is not perfectly symmetrycal
+	208 + 2 * (SCREEN_WIDTH /2 - 208 + 15), 813,
+	205 + 2 * (SCREEN_WIDTH /2 - 205 + 15), 829,
+	144 + 2 * (SCREEN_WIDTH /2 - 144 + 15), 791,
+	125 + 2 * (SCREEN_WIDTH /2 - 125 + 15), 762,
+	121 + 2 * (SCREEN_WIDTH /2 - 121 + 15), 647,
+	131 + 2 * (SCREEN_WIDTH /2 - 131 + 15), 646,
+	133 + 2 * (SCREEN_WIDTH /2 - 133 + 15), 737,
+	148 + 2 * (SCREEN_WIDTH /2 - 148 + 15), 758
 	};
 	
 	land_mass2 = App->physics->CreateChain(0, 0, landmass2, 18, false);
@@ -243,9 +243,11 @@ bool ModuleSceneIntro::CleanUp() {
 	circles.clear();
 	platforms.clear();
 	interactables.clear();
+	hearts.clear();
 	interactable_bumpers.clear();
 	score_interactables.clear();
 
+	hearts_list.clear();
 	interactables_list.clear();
 	score_interactables_list.clear();
 	interactable_bumpers_list.clear();
@@ -360,6 +362,7 @@ bool ModuleSceneIntro::CleanUp() {
 	ball = nullptr;
 	App->textures->Unload(sfx_spritesheet);
 	sfx_spritesheet = nullptr;
+	App->textures->Unload(platform);
 
 	return true;
 }
