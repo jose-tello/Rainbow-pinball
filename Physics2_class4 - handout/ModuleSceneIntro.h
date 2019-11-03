@@ -57,6 +57,8 @@ public:
 
 	PhysBody* land_mass1;
 	PhysBody* land_mass2;
+	PhysBody* land_mass3;
+	PhysBody* land_mass4;
 
 	PhysBody* trd_static_bumper;
 	PhysBody* fst_static_bumper;

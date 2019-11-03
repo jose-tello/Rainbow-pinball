@@ -175,6 +175,11 @@ bool ModuleSceneIntro::Start()
 	
 	land_mass2 = App->physics->CreateChain(0, 0, landmass2, 18, false);
 
+	
+	// small landmasses between hearts
+	land_mass3 = App->physics->CreateRectangle(305, 138, 10, 32, STATIC);
+	land_mass4 = App->physics->CreateRectangle(350, 138, 10, 32, STATIC);
+	
 
 	//create interactive sensors
 	heart.x = 360; heart.y = 217; heart.w = 28; heart.h = 23;
