@@ -150,28 +150,28 @@ bool ModuleSceneIntro::Start()
 	//Static land masses
 
 	int landmass1[18] = {
-	220, 806,
-	208, 813,
-	205, 829,
-	144, 791,
-	125, 762,
-	121, 647,
-	131, 646,
-	133, 737,
+	214, 802,
+	198, 807,
+	200, 825,
+	139, 787,
+	123, 760,
+	121, 645,
+	129, 646,
+	133, 735,
 	148, 758
 	};
 	land_mass1 = App->physics->CreateChain(0, 0, landmass1, 18, false);
 	
 	
 	int landmass2[18] = {
-	220 + 2 * (SCREEN_WIDTH/2 - 220 +15), 806, // +15 => adjusting to the fact that this pinball is not perfectly symmetrycal
-	208 + 2 * (SCREEN_WIDTH /2 - 208 + 15), 813,
-	205 + 2 * (SCREEN_WIDTH /2 - 205 + 15), 829,
-	144 + 2 * (SCREEN_WIDTH /2 - 144 + 15), 791,
-	125 + 2 * (SCREEN_WIDTH /2 - 125 + 15), 762,
-	121 + 2 * (SCREEN_WIDTH /2 - 121 + 15), 647,
-	131 + 2 * (SCREEN_WIDTH /2 - 131 + 15), 646,
-	133 + 2 * (SCREEN_WIDTH /2 - 133 + 15), 737,
+	214 + 2 * (SCREEN_WIDTH /2 - 214 + 15), 802, // +15 => adjusting to the fact that this pinball is not perfectly symmetrycal
+	198 + 2 * (SCREEN_WIDTH /2 - 198 + 15), 807,
+	200 + 2 * (SCREEN_WIDTH /2 - 200 + 15), 825,
+	139 + 2 * (SCREEN_WIDTH /2 - 139 + 15), 787,
+	123 + 2 * (SCREEN_WIDTH /2 - 123 + 15), 760,
+	121 + 2 * (SCREEN_WIDTH /2 - 121 + 15), 645,
+	129 + 2 * (SCREEN_WIDTH /2 - 129 + 15), 646,
+	133 + 2 * (SCREEN_WIDTH /2 - 133 + 15), 735,
 	148 + 2 * (SCREEN_WIDTH /2 - 148 + 15), 758
 	};
 	
@@ -476,10 +476,9 @@ update_status ModuleSceneIntro::Update() {
 
 		platform1->interacted = lifesaver1->interacted = false;
 		App->audio->PlayFx(plat_sound);
-		int x, y;
-		platform1->GetPosition(x, y);
+
 		//mov_platform1->body->SetTransform(b2Vec2((x + platform1->width), (y)), mov_platform1->GetRotation());
-		mov_platform1->body->SetTransform(platform1->body->GetPosition(), mov_platform1->GetRotation());
+		mov_platform1->body->SetTransform(b2Vec2(platform1->body->GetPosition().x, platform1->body->GetPosition().y - PIXEL_TO_METERS(10)), mov_platform1->GetRotation());
 		LOG("yeeeet");
 		
 	}
@@ -487,9 +486,8 @@ update_status ModuleSceneIntro::Update() {
 	if (platform2->interacted == true && lifesaver2->interacted == true) {
 		platform2->interacted = lifesaver2->interacted = false;
 		App->audio->PlayFx(plat_sound);
-		int x, y;
-		platform2->GetPosition(x, y);
-		mov_platform2->body->SetTransform(platform2->body->GetPosition(), mov_platform2->GetRotation());
+
+		mov_platform2->body->SetTransform(b2Vec2(platform2->body->GetPosition().x, platform2->body->GetPosition().y - PIXEL_TO_METERS(10)), mov_platform2->GetRotation());
 
 	}
 

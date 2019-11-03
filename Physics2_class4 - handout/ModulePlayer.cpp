@@ -49,13 +49,13 @@ bool ModulePlayer::Start()
 	};
 
 
-	leftFliper = App->physics->CreateBumper(SCREEN_WIDTH * 0.5f - 93, 818, -10, 10, lpoints, 14, -0.30f, -0.02f);
+	leftFliper = App->physics->CreateBumper(SCREEN_WIDTH * 0.5f - 96, 816, -10, 10, lpoints, 14, -0.30f, -0.02f);
 	player_flipers.add(leftFliper);
 	player_fliper_left.x = 120; player_fliper_left.y = 61; player_fliper_left.w = 98; player_fliper_left.h = 59;
 	player_flipers_rects.add(&player_fliper_left);
 
 
-	rightFliper = App->physics->CreateBumper(SCREEN_WIDTH * 0.5f + 125, 818, -90, 10, rpoints, 14, 0.05f, 0.30f);
+	rightFliper = App->physics->CreateBumper(SCREEN_WIDTH * 0.5f + 128, 816, -90, 10, rpoints, 14, 0.05f, 0.50f);
 	player_flipers.add(rightFliper);
 	player_fliper_right.x = 120; player_fliper_right.y = 0; player_fliper_right.w = 98; player_fliper_right.h = 59;
 	player_flipers_rects.add(&player_fliper_right);
@@ -179,6 +179,23 @@ void ModulePlayer::LoseGame() {
 	App->audio->PlayFx(App->player->game_over);
 	App->scene_intro->mov_platform1->body->SetTransform(b2Vec2(0,-30), 51);
 	App->scene_intro->mov_platform2->body->SetTransform(b2Vec2(0,-30), -51);
+
+	p2List_item<PhysBody*> *c;
+
+	c = App->scene_intro->hearts.getFirst();
+	while (c != NULL) {
+
+		c->data->interacted = false;
+		c = c->next;
+	}
+
+	c = App->scene_intro->score_interactables.getFirst();
+	while (c != NULL) {
+
+		c->data->interacted = false;
+		c = c->next;
+	}
+
 	App->fade->FadeToBlack(2);
 	
 
