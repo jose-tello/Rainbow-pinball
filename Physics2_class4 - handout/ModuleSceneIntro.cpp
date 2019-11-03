@@ -40,7 +40,8 @@ bool ModuleSceneIntro::Start()
 	bumpersound = App->audio->LoadFx("pinball/bonus.wav");
 	score = App->audio->LoadFx("pinball/score.wav");
 	lost_ball = App->audio->LoadFx("pinball/lost_ball.wav");
-	plat_sound = App->audio->LoadFx("pinball/plat_sound.wav");;
+	plat_sound = App->audio->LoadFx("pinball/plat_sound.wav");
+	UP = App->audio->LoadFx("pinball/UP.wav");
 	
 
 	//create map boundries
@@ -407,8 +408,9 @@ update_status ModuleSceneIntro::Update() {
 	}
 	if (App->input->GetKey(SDL_SCANCODE_3) == KEY_DOWN)
 	{
-		//lose a life
+		//gaine a life
 		App->player->lifes++;
+		App->audio->PlayFx(UP);
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_4) == KEY_DOWN)
@@ -643,6 +645,7 @@ void ModuleSceneIntro::BlitMap() {
 		if (App->player->lifes <= PLAYER_MAX_LIFES)
 		{
 			App->player->lifes++;
+			App->audio->PlayFx(UP);
 		}
 		
 		lifeCount = 0;
@@ -682,6 +685,7 @@ void ModuleSceneIntro::BlitMap() {
 		if (App->player->lifes <= PLAYER_MAX_LIFES)
 		{
 			App->player->lifes++;
+			App->audio->PlayFx(UP);
 		}
 
 		lifeCount2 = 0;

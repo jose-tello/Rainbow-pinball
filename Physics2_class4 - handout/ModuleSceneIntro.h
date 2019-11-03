@@ -112,6 +112,7 @@ public:
 	uint score;
 	uint background_music;
 	uint lost_ball;
+	uint UP;
 	p2Point<int> ray;
 	bool ray_on;
 };
