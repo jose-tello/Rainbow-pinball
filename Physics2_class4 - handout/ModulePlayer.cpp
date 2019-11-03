@@ -68,7 +68,7 @@ bool ModulePlayer::Start()
 
 	//ball_kicker
 
-	ball_kicker = App->physics->CreateRectangle(42, 885, 29, 30, DINAMIC); //Never change this
+	ball_kicker = App->physics->CreateRectangle(31, 895, 33, 50, DINAMIC); //Never change this
 	ball_kicker_pivot = App->physics->CreateRectangle(42, 930, 29, 10, STATIC);
 
 	b2PrismaticJointDef kicker_def;
