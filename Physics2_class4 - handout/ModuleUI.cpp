@@ -22,9 +22,9 @@ bool ModuleUI::Start()
 	LOG("Loading UI assets");
 	bool ret = true;
 
-	typography1 = App->fonts->Load("pinball/Font_name.png", "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789~·!@#$%^&*()-+=[]{}|:;ç'<>,./? ", 1);
-	numbers = App->fonts->Load("pinball/puntuationNumbers.png", "0123456789", 1);
-	graphics = App->textures->Load("pinball/ui_pinball.png");
+	typography1 = App->fonts->Load("assets/ui/Font_name.png", "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789~·!@#$%^&*()-+=[]{}|:;ç'<>,./? ", 1);
+	numbers = App->fonts->Load("assets/ui/puntuationNumbers.png", "0123456789", 1);
+	graphics = App->textures->Load("assets/ui/ui_pinball.png");
 	
 
 	puntuationUI.x = 0;
@@ -57,7 +57,6 @@ bool ModuleUI::CleanUp() {
 
 // Update: draw background
 update_status ModuleUI::Update() {
-	
 	
 	if (App->input->GetKey(SDL_SCANCODE_F2) == KEY_DOWN)
 	{
@@ -107,6 +106,7 @@ void ModuleUI::SumPuntuation(int points) {
 }
 
 void ModuleUI::BlitPuntuation() {
+
 	int x = strlen(playerPuntuation); //Get the current array lenght
 
 	App->fonts->BlitText(240 - x * App->fonts->fonts[numbers].char_w, 60, numbers, playerPuntuation);
@@ -120,6 +120,7 @@ void ModuleUI::BlitPuntuation() {
 }
 
 void ModuleUI::BlitLives() {
+
 	for (int i = 0; i < App->player->lifes-1; i++)
 	{
 		App->renderer->Blit(graphics, 239 - 24 * i, 33, &ballsRemaining);

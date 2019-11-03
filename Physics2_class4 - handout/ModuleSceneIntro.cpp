@@ -29,12 +29,12 @@ bool ModuleSceneIntro::Start()
 
 	App->renderer->camera.x = App->renderer->camera.y = 0;
 
-	ball = App->textures->Load("pinball/the_ball.png"); 
-	circle = App->textures->Load("pinball/the_ball.png");
+	ball = App->textures->Load("assets/map/the_ball.png"); 
+	circle = App->textures->Load("assets/map/the_ball.png");
 	
-	tabletop = App->textures->Load("pinball/tabletop_no_bumpers.png");
-	sfx_spritesheet = App->textures->Load("pinball/sfx_spritesheet.png");
-	platform = App->textures->Load("pinball/platform.png");
+	tabletop = App->textures->Load("assets/map/tabletop_no_bumpers.png");
+	sfx_spritesheet = App->textures->Load("assets/map/sfx_spritesheet.png");
+	platform = App->textures->Load("assets/map/platform.png");
 
 	background_music = App->audio->PlayMusic("pinball/my_little_pony.ogg", 3);
 	bumpersound = App->audio->LoadFx("pinball/bonus.wav");
