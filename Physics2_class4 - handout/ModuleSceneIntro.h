@@ -28,6 +28,7 @@ public:
 	p2List<PhysBody*> hearts;
 	p2List<PhysBody*> interactable_bumpers;
 	p2List<PhysBody*> score_interactables;
+	p2List<PhysBody*> bumpers_surface;
 
 
 	p2List<SDL_Rect*> hearts_list;
@@ -60,6 +61,9 @@ public:
 	PhysBody* trd_static_bumper;
 	PhysBody* fst_static_bumper;
 	PhysBody* snd_static_bumper;
+	PhysBody* bumpersensor1;
+	PhysBody* bumpersensor2;
+	PhysBody* bumpersensor3;
 
 	PhysBody* ruby_b;
 	PhysBody* sapphire_b;

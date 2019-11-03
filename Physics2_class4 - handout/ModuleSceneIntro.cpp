@@ -214,6 +214,16 @@ bool ModuleSceneIntro::Start()
 	//sensors of the activable platforms
 	platform1 = App->physics->CreateRectangleSensor(107, 828, 36, 5);
 	platform2 = App->physics->CreateRectangleSensor(550, 828, 36, 5);
+
+	//bumper sensors
+	bumpersensor1 = (App->physics->CreateAngledRectangle(450, 700, 5, 120, STATIC,0.4));
+	bumpers_surface.add(bumpersensor1);
+
+	bumpersensor2 = (App->physics->CreateAngledRectangle(206, 700, 5, 120, STATIC, -0.4));
+	bumpers_surface.add(bumpersensor2);
+
+	bumpersensor3 = (App->physics->CreateAngledRectangle(280, 352, 5, 90, STATIC, -1.3));
+	bumpers_surface.add(bumpersensor3);
 	
 	//create "ball death trigger"
 	death_trigger = App->physics->CreateRectangleSensor(328, 930, 110, 5);
@@ -225,13 +235,13 @@ bool ModuleSceneIntro::Start()
 	return ret;
 }
 
-// Load assets
+// UnLoad assets
 bool ModuleSceneIntro::CleanUp() {
 
 	LOG("Unloading Intro scene");
 
 	circles.clear();
-	boxes.clear();
+	platforms.clear();
 	interactables.clear();
 	interactable_bumpers.clear();
 	score_interactables.clear();
@@ -430,7 +440,7 @@ update_status ModuleSceneIntro::Update() {
 		if (App->player->lifes > 0) { App->audio->PlayFx(lost_ball); } //if its not game over, play a sound
 
 		//send ball back to original pos
-		circles.getFirst()->data->body->SetTransform(b2Vec2(PIXEL_TO_METERS(30), PIXEL_TO_METERS(810)), 0);
+		circles.getFirst()->data->body->SetTransform(b2Vec2(PIXEL_TO_METERS(30), PIXEL_TO_METERS(810)), 0); //original pos
 		circles.getFirst()->data->body->SetLinearVelocity(b2Vec2(0, 0));
 		circles.getFirst()->data->body->SetAngularVelocity(0);
 	}
@@ -523,6 +533,13 @@ update_status ModuleSceneIntro::PostUpdate() {
 		c = c->next;
 	}
 
+	c = bumpers_surface.getFirst();
+	while (c != NULL) {
+
+		c->data->interacted = false;
+		c = c->next;
+	}
+
 	//make sure that the block of lifesaver only happens if you're coming from it, not to it
 	platform2->interacted = false;
 	platform1->interacted = false;
@@ -568,8 +585,13 @@ void ModuleSceneIntro::BlitMap() {
 			int x, y;
 			c->data->GetPosition(x, y);
 			App->renderer->Blit(sfx_spritesheet, x, y, d->data);
-
 			App->UI->SumPuntuation(5);
+
+			//pump up speed. No direction = this is not a bumper.
+			b2Vec2 speed = c->data->body->GetLinearVelocity();
+			c->data->body->SetLinearVelocity(2*speed);
+
+
 		}
 		c = c->next;
 		d = d->next;
@@ -643,24 +665,30 @@ void ModuleSceneIntro::BlitMap() {
 
 
 	//different so we can add velocity calculus next.
+	p2List_item<PhysBody*>*b = bumpers_surface.getFirst();
 	c = interactable_bumpers.getFirst();
 	d = interactable_bumpers_list.getFirst();
 
-	while (c != NULL && d != NULL)
+	while (b != NULL && c != NULL && d != NULL)
 	{
-		if (c->data->interacted) {
+		if (b->data->interacted) {
 			App->audio->PlayFx(bumpersound);
 			int x, y;
 			c->data->GetPosition(x, y);
 			App->renderer->Blit(sfx_spritesheet, x, y, d->data);
-			x = circles.getFirst()->data->body->GetLinearVelocity().x;
-			y = circles.getFirst()->data->body->GetLinearVelocity().y;
 
-			//circles.getFirst()->data->body->SetLinearVelocity(b2Vec2(2*x,2*y));
-			circles.getFirst()->data->body->SetLinearVelocity(b2Vec2(2 * y, 2 * x)); //perpendicular
-		
-			
+			if (c->data == fst_static_bumper) {
+				circles.getFirst()->data->body->ApplyForceToCenter(b2Vec2(-10,-200), true);
+			}
+			else if (c->data == snd_static_bumper) {
+				circles.getFirst()->data->body->ApplyForceToCenter(b2Vec2(10, -200), true);
+			}
+			else if (c->data == trd_static_bumper) {
+				circles.getFirst()->data->body->ApplyForceToCenter(b2Vec2(0, 200), true);
+			}
+
 		}
+		b = b->next;
 		c = c->next;
 		d = d->next;
 	}
