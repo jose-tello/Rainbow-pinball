@@ -414,20 +414,10 @@ update_status ModuleSceneIntro::Update() {
 		circles.getFirst()->data->body->SetLinearVelocity(b2Vec2(0, 0));
 		circles.getFirst()->data->body->SetAngularVelocity(0);
 	}
-	if (App->input->GetKey(SDL_SCANCODE_3) == KEY_DOWN)
-	{
-		//gaine a life
-		App->player->lifes++;
-		App->audio->PlayFx(UP);
-	}
 
-	if (App->input->GetKey(SDL_SCANCODE_4) == KEY_DOWN)
-	{
-	//lose a life
-		App->player->lifes--; 
-	}
 
-	if (App->input->GetKey(SDL_SCANCODE_5) == KEY_REPEAT)
+
+	if (App->input->GetKey(SDL_SCANCODE_7) == KEY_REPEAT)
 	{
 		//reset velocity
 		circles.getFirst()->data->body->SetLinearVelocity(b2Vec2(0, 0));
