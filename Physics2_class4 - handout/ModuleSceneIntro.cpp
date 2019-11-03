@@ -271,7 +271,11 @@ update_status ModuleSceneIntro::Update() {
 		circles.getFirst()->data->body->SetLinearVelocity(b2Vec2(0, 0));
 		circles.getFirst()->data->body->SetAngularVelocity(0);
 	}
-
+	if (App->input->GetKey(SDL_SCANCODE_3) == KEY_DOWN)
+	{
+		//lose a life
+		App->player->lifes++;
+	}
 
 	if (App->input->GetKey(SDL_SCANCODE_4) == KEY_DOWN)
 	{
@@ -279,7 +283,7 @@ update_status ModuleSceneIntro::Update() {
 		App->player->lifes--; 
 	}
 
-	if (App->input->GetKey(SDL_SCANCODE_5) == KEY_DOWN)
+	if (App->input->GetKey(SDL_SCANCODE_5) == KEY_REPEAT)
 	{
 		//reset velocity
 		circles.getFirst()->data->body->SetLinearVelocity(b2Vec2(0, 0));
@@ -300,16 +304,8 @@ update_status ModuleSceneIntro::Update() {
 
 	}
 
-	// Prepare for raycast ------------------------------------------------------
-	
-	iPoint mouse;
-	mouse.x = App->input->GetMouseX();
-	mouse.y = App->input->GetMouseY();
-	int ray_hit = ray.DistanceTo(mouse);
 
-	fVector normal(0.0f, 0.0f);
-
-	
+	//Perform different checks----------------------
 	
 	if (death_trigger->interacted == true) {
 		
@@ -360,6 +356,16 @@ update_status ModuleSceneIntro::Update() {
 
 	BlitMap();
 	
+
+	// Prepare for raycast ------------------------------------------------------
+
+	iPoint mouse;
+	mouse.x = App->input->GetMouseX();
+	mouse.y = App->input->GetMouseY();
+	int ray_hit = ray.DistanceTo(mouse);
+
+	fVector normal(0.0f, 0.0f);
+
 
 	// ray -----------------
 	if(ray_on == true)
