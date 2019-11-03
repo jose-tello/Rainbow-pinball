@@ -36,7 +36,7 @@ bool ModuleSceneIntro::Start()
 	sfx_spritesheet = App->textures->Load("pinball/sfx_spritesheet.png");
 	platform = App->textures->Load("pinball/platform.png");
 
-	background_music = App->audio->PlayMusic("pinball/my_little_pony.wav", 3);
+	background_music = App->audio->PlayMusic("pinball/my_little_pony.ogg", 3);
 	bumpersound = App->audio->LoadFx("pinball/bonus.wav");
 	score = App->audio->LoadFx("pinball/score.wav");
 	lost_ball = App->audio->LoadFx("pinball/lost_ball.wav");
