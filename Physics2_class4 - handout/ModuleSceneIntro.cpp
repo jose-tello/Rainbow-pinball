@@ -40,6 +40,7 @@ bool ModuleSceneIntro::Start()
 	bumpersound = App->audio->LoadFx("pinball/bonus.wav");
 	score = App->audio->LoadFx("pinball/score.wav");
 	lost_ball = App->audio->LoadFx("pinball/lost_ball.wav");
+	plat_sound = App->audio->LoadFx("pinball/plat_sound.wav");;
 	
 
 	//create map boundries
@@ -470,10 +471,9 @@ update_status ModuleSceneIntro::Update() {
 		platform1->interacted = lifesaver1->interacted = false;
 		int x, y;
 		platform1->GetPosition(x, y);
-		PhysBody* thisbox = (App->physics->CreateAngledRectangle(x + platform1->width, y , platform1->width, platform1->height, KINEMATIC,60));
+		App->audio->PlayFx(plat_sound);
+		platforms.add((App->physics->CreateAngledRectangle(x + platform1->width, y , platform1->width, platform1->height, KINEMATIC,60)));
 		
-		//thisbox->body->SetTransform(b2Vec2(x, y), 45);
-		platforms.add(thisbox);
 	}
 
 	if (platform2->interacted == true && lifesaver2->interacted == true) {
@@ -481,6 +481,7 @@ update_status ModuleSceneIntro::Update() {
 		platform2->interacted = lifesaver2->interacted = false;
 		int x, y;
 		platform2->GetPosition(x, y);
+		App->audio->PlayFx(plat_sound);
 		platforms.add(App->physics->CreateAngledRectangle(x + platform2->width, y , platform2->width, platform2->height, KINEMATIC, -60));
 	
 	}

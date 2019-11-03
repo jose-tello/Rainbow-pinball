@@ -107,7 +107,7 @@ public:
 	
 
 
-
+	uint plat_sound;
 	uint bumpersound;
 	uint score;
 	uint background_music;
