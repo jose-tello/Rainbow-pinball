@@ -27,9 +27,9 @@ Currently there is no installation required, just open the .exe provided in the 
 	F1 Switch display of box2D information
 	SPACE: display raycast
 	1: Reset ball position back to the kicker
-	3: Gain a life
 	4:Lose a life
-	5: Stop the ball 
+	5: Gain a life
+	7: Stop the ball 
 	Left mouse button: manually drag the ball while in F1 state
 
 ### Player Controls: <br>
