@@ -267,6 +267,12 @@ bool ModuleSceneIntro::CleanUp() {
 	score_interactables_list.clear();
 	interactable_bumpers_list.clear();
 
+	delete mov_platform1;
+	mov_platform1 = nullptr;
+
+	delete mov_platform2;
+	mov_platform2 = nullptr;
+	
 	delete sensorheart1;
 	sensorheart1 = nullptr;
 
