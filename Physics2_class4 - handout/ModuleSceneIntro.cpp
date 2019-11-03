@@ -29,19 +29,19 @@ bool ModuleSceneIntro::Start()
 
 	App->renderer->camera.x = App->renderer->camera.y = 0;
 
-	ball = App->textures->Load("pinball/the_ball.png"); 
-	circle = App->textures->Load("pinball/the_ball.png");
+	ball = App->textures->Load("assets/map/the_ball.png"); 
+	circle = App->textures->Load("assets/map/the_ball.png");
 	
-	tabletop = App->textures->Load("pinball/tabletop_no_bumpers.png");
-	sfx_spritesheet = App->textures->Load("pinball/sfx_spritesheet.png");
-	platform = App->textures->Load("pinball/platform.png");
+	tabletop = App->textures->Load("assets/map/tabletop_no_bumpers.png");
+	sfx_spritesheet = App->textures->Load("assets/map/sfx_spritesheet.png");
+	platform = App->textures->Load("assets/map/platform.png");
 
-	background_music = App->audio->PlayMusic("pinball/my_little_pony.wav", 3);
-	bumpersound = App->audio->LoadFx("pinball/bonus.wav");
-	score = App->audio->LoadFx("pinball/score.wav");
-	lost_ball = App->audio->LoadFx("pinball/lost_ball.wav");
-	plat_sound = App->audio->LoadFx("pinball/plat_sound.wav");
-	UP = App->audio->LoadFx("pinball/UP.wav");
+	background_music = App->audio->PlayMusic("assets/music_and_sounds/my_little_pony.wav", 3);
+	bumpersound = App->audio->LoadFx("assets/music_and_sounds/bonus.wav");
+	score = App->audio->LoadFx("assets/music_and_sounds/score.wav");
+	lost_ball = App->audio->LoadFx("assets/music_and_sounds/lost_ball.wav");
+	plat_sound = App->audio->LoadFx("assets/music_and_sounds/plat_sound.wav");
+	UP = App->audio->LoadFx("assets/music_and_sounds/UP.wav");
 	
 
 	//create map boundries

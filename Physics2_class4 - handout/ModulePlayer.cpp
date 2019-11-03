@@ -21,10 +21,10 @@ bool ModulePlayer::Start()
 {
 	LOG("Loading player");
 
-	sfx_spritesheet = App->textures->Load("pinball/sfx_spritesheet.png");
-	launcher = App->textures->Load("pinball/launcher.png");
+	sfx_spritesheet = App->textures->Load("assets/map/sfx_spritesheet.png");
+	launcher = App->textures->Load("assets/map/launcher.png");
 
-	game_over = App->audio->LoadFx("pinball/game_over.wav");
+	game_over = App->audio->LoadFx("assets/music_and_sounds/game_over.wav");
 	lifes = 3;
 
 	int lpoints[14] = {
@@ -132,13 +132,13 @@ update_status ModulePlayer::Update()
 
 	if (App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_DOWN)
 	{
-		leftFliper->body->ApplyAngularImpulse(-50, true);
-		leftUpFliper->body->ApplyAngularImpulse(-50, true);
+		leftFliper->body->ApplyAngularImpulse(-60, true);
+		leftUpFliper->body->ApplyAngularImpulse(-60, true);
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_DOWN)
 	{
-		rightFliper->body->ApplyAngularImpulse(50, true);
+		rightFliper->body->ApplyAngularImpulse(60, true);
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT || App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_DOWN)
