@@ -620,7 +620,7 @@ void ModuleSceneIntro::BlitMap() {
 
 	//different because the do not stop to blit after first collision. First 3 are the hearts, others, the microlights.
 
-	int count = 0;
+	int lifeCount = 0;
 
 	c = score_interactables.getFirst();
 	d = score_interactables_list.getFirst();
@@ -632,16 +632,20 @@ void ModuleSceneIntro::BlitMap() {
 			c->data->GetPosition(x, y);
 			App->renderer->Blit(sfx_spritesheet, x, y, d->data);
 
-			count++;
+			lifeCount++;
 		}
 		c = c->next;
 		d = d->next;
 	}
 
-	if (count == 14)
+	if (lifeCount == 14)
 	{
-		App->player->lifes++;
-		count = 0;
+		if (App->player->lifes <= PLAYER_MAX_LIFES)
+		{
+			App->player->lifes++;
+		}
+		
+		lifeCount = 0;
 
 		c = score_interactables.getFirst();
 		d = score_interactables_list.getFirst();
@@ -655,6 +659,8 @@ void ModuleSceneIntro::BlitMap() {
 		}
 	}
 	//now, the hearts
+	int lifeCount2 = 0;
+
 	c = hearts.getFirst();
 	d = hearts_list.getFirst();
 	while (c != NULL && d != NULL)
@@ -665,13 +671,32 @@ void ModuleSceneIntro::BlitMap() {
 			c->data->GetPosition(x, y);
 			App->renderer->Blit(sfx_spritesheet, x, y, d->data);
 
-			count++;
+			lifeCount2++;
 		}
 		c = c->next;
 		d = d->next;
 	}
 
+	if (lifeCount2 == 3)
+	{
+		if (App->player->lifes <= PLAYER_MAX_LIFES)
+		{
+			App->player->lifes++;
+		}
 
+		lifeCount2 = 0;
+
+		c = hearts.getFirst();
+		d = hearts_list.getFirst();
+		while (c != NULL && d != NULL)
+		{
+			if (c->data->interacted) {
+				c->data->interacted = false;
+			}
+			c = c->next;
+			d = d->next;
+		}
+	}
 
 	//different so we can add velocity calculus next.
 	p2List_item<PhysBody*>*b = bumpers_surface.getFirst();

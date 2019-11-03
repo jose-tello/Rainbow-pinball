@@ -5,6 +5,8 @@
 #include "Globals.h"
 #include "SDL\include\SDL.h"
 
+#define PLAYER_MAX_LIFES 6
+
 class PhysBody;
 
 class ModulePlayer : public Module

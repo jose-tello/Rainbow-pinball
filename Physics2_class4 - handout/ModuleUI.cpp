@@ -109,7 +109,7 @@ void ModuleUI::SumPuntuation(int points) {
 void ModuleUI::BlitPuntuation() {
 	int x = strlen(playerPuntuation); //Get the current array lenght
 
-	App->fonts->BlitText(240 - x * App->fonts->fonts[0].char_w, 60, numbers, playerPuntuation);
+	App->fonts->BlitText(240 - x * App->fonts->fonts[numbers].char_w, 60, numbers, playerPuntuation);
 
 	App->fonts->BlitText(30, 110, typography1, "MAX POINTS:");
 	App->fonts->BlitText(160, 110, typography1, maxPuntuation);
